@@ -1,0 +1,79 @@
+import { Question } from "@prisma/client";
+import { useEffect, useState } from "react";
+import { useAnimate, AnimationPlaybackControls } from "framer-motion";
+import { Copy, Pause, Play, SkipNext } from "iconoir-react";
+import copy from "copy-to-clipboard";
+
+const Drop: React.FC<{
+  question: Question;
+  onComplete: Function;
+}> = ({ question, onComplete }) => {
+  const [ref, animate] = useAnimate();
+  const [animation, setAnimation] = useState<AnimationPlaybackControls>();
+  const [started, setStarted] = useState(true);
+
+  const toggleTimer = () => {
+    if (started) {
+      animation?.pause();
+    } else {
+      animation?.play();
+    }
+    setStarted(!started);
+  };
+
+  useEffect(() => {
+    setAnimation(
+      animate(
+        "span",
+        { width: 0 },
+        {
+          duration: Number(question.timeout) / 1000,
+          ease: "linear",
+          onUpdate: (latest) => {
+            if (latest === 0) {
+              onComplete(question.id);
+            }
+          },
+        }
+      )
+    );
+  }, []);
+
+  return (
+    <>
+      <div
+        ref={ref}
+        key={question.id}
+        id={question.id}
+        className="relative w-full overflow-hidden rounded-2xl border-2 border-secondary bg-gradient-to-br from-base-300 to-base-100 p-4 pb-2"
+      >
+        <span className="absolute top-0 left-0 h-2 w-full bg-gradient-to-tr from-primary to-secondary"></span>
+        <p className="w-full">{question.question}</p>
+        <div className="flex w-full justify-end gap-1">
+          <button
+            className="btn-sm btn px-1 hover:btn-info"
+            onClick={() => onComplete(question.id)}
+          >
+            <SkipNext />
+          </button>
+          <button
+            className="btn-sm btn px-1 hover:btn-secondary"
+            onClick={() =>
+              copy(question.question, { onCopy: () => console.log("copied") })
+            }
+          >
+            <Copy />
+          </button>
+          <button
+            className="btn-sm btn px-1 hover:btn-primary"
+            onClick={() => toggleTimer()}
+          >
+            {started ? <Pause /> : <Play />}
+          </button>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Drop;
