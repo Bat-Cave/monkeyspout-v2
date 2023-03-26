@@ -19,6 +19,7 @@
     "@trpc/server": "^10.9.0",
     "copy-to-clipboard": "^3.3.3",
     "daisyui": "^2.51.5",
+    "date-fns": "^2.29.3",
     "framer-motion": "^10.9.1",
     "iconoir": "^6.4.1",
     "iconoir-react": "^6.4.1",

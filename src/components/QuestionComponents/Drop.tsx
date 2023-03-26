@@ -1,7 +1,7 @@
 import { Question } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { useAnimate, AnimationPlaybackControls } from "framer-motion";
-import { Copy, Pause, Play, SkipNext } from "iconoir-react";
+import { CheckCircle, Copy, Pause, Play, SkipNext } from "iconoir-react";
 import copy from "copy-to-clipboard";
 
 const Drop: React.FC<{
@@ -11,6 +11,7 @@ const Drop: React.FC<{
   const [ref, animate] = useAnimate();
   const [animation, setAnimation] = useState<AnimationPlaybackControls>();
   const [started, setStarted] = useState(true);
+  const [copied, setCopied] = useState(false);
 
   const toggleTimer = () => {
     if (started) {
@@ -19,6 +20,15 @@ const Drop: React.FC<{
       animation?.play();
     }
     setStarted(!started);
+  };
+
+  const handleCopy = () => {
+    if (!copied) {
+      setCopied(true);
+    }
+    setTimeout(() => {
+      setCopied(false);
+    }, 3000);
   };
 
   useEffect(() => {
@@ -58,11 +68,9 @@ const Drop: React.FC<{
           </button>
           <button
             className="btn-sm btn px-1 hover:btn-secondary"
-            onClick={() =>
-              copy(question.question, { onCopy: () => console.log("copied") })
-            }
+            onClick={() => copy(question.question, { onCopy: handleCopy })}
           >
-            <Copy />
+            {copied ? <CheckCircle /> : <Copy />}
           </button>
           <button
             className="btn-sm btn px-1 hover:btn-primary"
