@@ -24,4 +24,22 @@ export const questionsRouter = createTRPCRouter({
 
       return res;
     }),
+  generateDefault: publicProcedure
+    .input(
+      z.array(
+        z.object({
+          category: z.string(),
+          type: z.string(),
+          special: z.string(),
+          question: z.string(),
+          timeout: z.string(),
+        })
+      )
+    )
+    .mutation(async ({ ctx, input }) => {
+      const res = await ctx.prisma.question.createMany({
+        data: input,
+      });
+      return res;
+    }),
 });

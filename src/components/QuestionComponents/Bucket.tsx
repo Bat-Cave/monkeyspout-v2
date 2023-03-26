@@ -1,34 +1,52 @@
-import { Question } from "@prisma/client";
+import type { Question } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useMeasure from "react-use-measure";
 import { api } from "~/utils/api";
 import Drop from "./Drop";
+import { pickAndRemoveRandomItem, shuffle } from "~/utils/tools";
 
 const Bucket: React.FC<{ dropCount?: number }> = ({ dropCount = 1 }) => {
   const [ref, bounds] = useMeasure();
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [questionsShowing, setQuestionsShowing] = useState<Question[]>([]);
   const { data } = api.questions.getAll.useQuery();
 
   useEffect(() => {
     if (data?.length) {
-      setQuestions(data);
+      const shuffled = shuffle(data);
+
+      if (!questionsShowing.length) {
+        const newQs = [];
+        let newQuestions = [];
+        for (let i = 0; i < dropCount; i += 1) {
+          const { item, newArray } = pickAndRemoveRandomItem(shuffled);
+          newQs.push(item);
+          newQuestions = newArray;
+        }
+        setQuestionsShowing(newQs);
+        setQuestions(newQuestions);
+      }
     }
   }, [data]);
 
-  const onComplete = (id: string) => {
-    setQuestions((curr) => {
-      const filtered = curr.filter((q) => q.id !== id);
-      if (filtered.length < dropCount) {
-        return [...filtered, ...[...(data?.filter((q) => q.id !== id) || [])]];
-      }
-      return filtered;
-    });
+  const getNewQuestion = () => {
+    const { item, newArray } = pickAndRemoveRandomItem(questions);
+    setQuestions(newArray);
+    return item;
   };
 
-  useEffect(() => {
-    console.log({ questions });
-  }, [questions]);
+  const onComplete = (index: number) => {
+    setQuestionsShowing((curr) => {
+      return curr.map((q, i) => {
+        if (i === index) {
+          console.log({ index });
+          return getNewQuestion();
+        }
+        return q;
+      });
+    });
+  };
 
   return (
     <motion.div
@@ -40,20 +58,25 @@ const Bucket: React.FC<{ dropCount?: number }> = ({ dropCount = 1 }) => {
         className="card flex w-full flex-col gap-4 border-2 border-slate-400 p-4"
       >
         <AnimatePresence mode="popLayout">
-          {questions.map((question) => (
-            <motion.div
-              initial={{ y: -50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1, height: "auto" }}
-              exit={{ height: 0, opacity: 0 }}
-              key={question.id}
-            >
-              <Drop
-                key={question.id}
-                question={question}
-                onComplete={onComplete}
-              />
-            </motion.div>
-          ))}
+          {questionsShowing.length ? (
+            questionsShowing.map((q, i) => (
+              <motion.div
+                initial={{ opacity: 0, x: -500 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 500 }}
+                transition={{ duration: 0.75, type: "spring" }}
+                key={q?.id}
+              >
+                <Drop
+                  key={q?.id}
+                  question={q}
+                  onComplete={() => onComplete(i)}
+                />
+              </motion.div>
+            ))
+          ) : (
+            <>Loading</>
+          )}
         </AnimatePresence>
       </div>
     </motion.div>

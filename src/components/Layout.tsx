@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import Nav from "./Nav";
 
 const Layout: React.FC<PropsWithChildren> = ({ children }) => {

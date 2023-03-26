@@ -1,14 +1,18 @@
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
+import logo from "~/assets/logo.png";
 
 const Nav: React.FC = () => {
   const { isSignedIn, user } = useUser();
   const role = user?.organizationMemberships[0]?.role;
   const isAdmin = role === "admin";
   return (
-    <nav className="fixed top-0 flex h-20 w-full justify-center bg-gradient-to-tr from-primary-focus to-primary px-12">
+    <nav className="fixed top-0 z-50 flex h-20 w-full justify-center bg-gradient-to-tr from-primary-focus to-primary px-2 md:px-12">
       <div className="flex w-full items-center justify-between md:max-w-7xl">
-        <p>MonkeySpout</p>
+        <Link href="/" className="flex items-center font-bold">
+          <img src={logo.src} alt="monkey emoji" className="w-12" />
+          <p className="ml-2 hidden text-4xl md:block">Monkey Spout</p>
+        </Link>
         <div className="flex items-center gap-3">
           {!isSignedIn && (
             <SignInButton>
@@ -17,7 +21,7 @@ const Nav: React.FC = () => {
           )}
           {!!isSignedIn && (
             <>
-              <p>Welcome back, {user.firstName}</p>
+              <p className="hidden md:block">Welcome back, {user.firstName}</p>
               {isAdmin && (
                 <Link className="btn" href="/admin">
                   Admin

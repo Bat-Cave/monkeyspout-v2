@@ -26,7 +26,7 @@ const AddQuestion: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   };
 
   const handleSubmit = () => {
-    mutate({
+    void mutate({
       question,
       category,
       type,

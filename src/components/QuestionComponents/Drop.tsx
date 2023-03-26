@@ -1,6 +1,7 @@
-import { Question } from "@prisma/client";
+import type { Question } from "@prisma/client";
+import type { AnimationPlaybackControls } from "framer-motion";
 import { useEffect, useState } from "react";
-import { useAnimate, AnimationPlaybackControls } from "framer-motion";
+import { useAnimate } from "framer-motion";
 import { CheckCircle, Copy, Pause, Play, SkipNext } from "iconoir-react";
 import copy from "copy-to-clipboard";
 
@@ -12,6 +13,7 @@ const Drop: React.FC<{
   const [animation, setAnimation] = useState<AnimationPlaybackControls>();
   const [started, setStarted] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [completed, setCompleted] = useState(false);
 
   const toggleTimer = () => {
     if (started) {
@@ -40,8 +42,9 @@ const Drop: React.FC<{
           duration: Number(question.timeout) / 1000,
           ease: "linear",
           onUpdate: (latest) => {
-            if (latest === 0) {
-              onComplete(question.id);
+            if (latest === 0 && !completed) {
+              onComplete();
+              setCompleted(true);
             }
           },
         }
@@ -50,7 +53,7 @@ const Drop: React.FC<{
   }, []);
 
   return (
-    <>
+    <div>
       <div
         ref={ref}
         key={question.id}
@@ -62,7 +65,7 @@ const Drop: React.FC<{
         <div className="flex w-full justify-end gap-1">
           <button
             className="btn-sm btn px-1 hover:btn-info"
-            onClick={() => onComplete(question.id)}
+            onClick={() => onComplete()}
           >
             <SkipNext />
           </button>
@@ -80,7 +83,7 @@ const Drop: React.FC<{
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
