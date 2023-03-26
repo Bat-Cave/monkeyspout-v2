@@ -17,10 +17,11 @@ const Bucket: React.FC<{ dropCount?: number }> = ({ dropCount = 1 }) => {
       const shuffled = shuffle(data);
 
       if (!questionsShowing.length) {
-        const newQs = [];
-        let newQuestions = [];
+        const newQs: Question[] = [];
+        let newQuestions: Question[] = [];
         for (let i = 0; i < dropCount; i += 1) {
           const { item, newArray } = pickAndRemoveRandomItem(shuffled);
+          //@ts-ignore
           newQs.push(item);
           newQuestions = newArray;
         }
@@ -37,6 +38,7 @@ const Bucket: React.FC<{ dropCount?: number }> = ({ dropCount = 1 }) => {
   };
 
   const onComplete = (index: number) => {
+    //@ts-ignore
     setQuestionsShowing((curr) => {
       return curr.map((q, i) => {
         if (i === index) {
