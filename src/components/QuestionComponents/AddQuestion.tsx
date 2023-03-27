@@ -16,7 +16,7 @@ const AddQuestion: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { mutate, isLoading } = api.questions.create.useMutation({
     onSuccess: () => {
       onClose();
-      ctx.questions.getAll.invalidate();
+      void ctx.questions.getAll.invalidate();
     },
   });
 

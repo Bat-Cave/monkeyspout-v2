@@ -7,7 +7,7 @@ import copy from "copy-to-clipboard";
 
 const Drop: React.FC<{
   question: Question;
-  onComplete: Function;
+  onComplete: () => void;
 }> = ({ question, onComplete }) => {
   const [ref, animate] = useAnimate();
   const [animation, setAnimation] = useState<AnimationPlaybackControls>();
