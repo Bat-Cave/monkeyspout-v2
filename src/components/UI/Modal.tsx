@@ -1,12 +1,12 @@
 import { Cancel } from "iconoir-react";
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 
 const Modal: React.FC<
   PropsWithChildren & {
     buttonText: string;
     title: string;
     isOpen: boolean;
-    setIsOpen: Function;
+    setIsOpen: (arg0: boolean) => void;
   }
 > = ({
   buttonText = "Open Modal",

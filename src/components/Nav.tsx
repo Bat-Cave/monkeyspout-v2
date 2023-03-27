@@ -11,7 +11,13 @@ const Nav: React.FC = () => {
     <nav className="fixed top-0 z-50 flex h-20 w-full justify-center bg-gradient-to-tr from-primary-focus to-primary px-2 md:px-12">
       <div className="flex w-full items-center justify-between md:max-w-7xl">
         <Link href="/" className="flex items-center font-bold">
-          <Image src={logo.src} alt="monkey emoji" className="w-12" />
+          <Image
+            src={logo.src}
+            alt="monkey emoji"
+            className="w-12"
+            width={48}
+            height={48}
+          />
           <p className="ml-2 hidden text-4xl md:block">Monkey Spout</p>
         </Link>
         <div className="flex items-center gap-3">

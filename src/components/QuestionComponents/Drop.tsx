@@ -50,7 +50,7 @@ const Drop: React.FC<{
         }
       )
     );
-  }, []);
+  }, [animate, completed, onComplete, question.timeout]);
 
   return (
     <div>

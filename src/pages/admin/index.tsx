@@ -5,15 +5,9 @@ import { format } from "date-fns";
 
 import Layout from "~/components/Layout";
 import AddQuestionModal from "~/components/QuestionComponents/AddQuestionModal";
-import { questions } from "~/utils/quesitons";
 
 const Admin: NextPage = () => {
   const { data } = api.questions.getAll.useQuery();
-  const { mutate, isLoading } = api.questions.generateDefault.useMutation();
-  const formattedQuestions = questions.map((q) => ({
-    ...q,
-    timeout: `${q.timeout}`,
-  }));
   return (
     <>
       <Head>
@@ -31,15 +25,6 @@ const Admin: NextPage = () => {
           <h2 className="text-4xl font-bold">Questions</h2>
           <AddQuestionModal />
         </div>
-        {/* <div className="mb-3 flex w-full items-center justify-between md:max-w-5xl">
-          <h2 className="text-4xl font-bold">Generate Base Questions</h2>
-          <button
-            onClick={() => mutate(formattedQuestions)}
-            disabled={isLoading}
-          >
-            {isLoading ? "Loading" : "Add Base Questions"}
-          </button>
-        </div> */}
         <div className="margin-x-auto w-full overflow-x-auto md:max-w-6xl">
           <table className="table-compact table w-full">
             <thead>
