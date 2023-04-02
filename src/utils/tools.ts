@@ -14,3 +14,12 @@ export const pickAndRemoveRandomItem = (array: Question[]) => {
   newArray.splice(index, 1);
   return { item, newArray };
 };
+
+export const removeAndPushToEnd = (arr: number[], num: number): number[] => {
+  const index = arr.indexOf(num);
+  if (index !== -1) {
+    arr.splice(index, 1);
+    arr.push(num);
+  }
+  return arr;
+};

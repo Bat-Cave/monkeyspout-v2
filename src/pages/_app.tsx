@@ -4,11 +4,14 @@ import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import { QuestionsProvider } from "~/context/useQuestions";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <ClerkProvider>
-      <Component {...pageProps} />
+      <QuestionsProvider>
+        <Component {...pageProps} />
+      </QuestionsProvider>
     </ClerkProvider>
   );
 };

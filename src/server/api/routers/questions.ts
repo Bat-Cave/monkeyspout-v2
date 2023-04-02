@@ -4,7 +4,7 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const questionsRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.question.findMany();
+    return ctx.prisma.question.findMany({ take: 100 });
   }),
   create: publicProcedure
     .input(
