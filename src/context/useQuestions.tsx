@@ -13,7 +13,7 @@ type QuestionsContextType = {
   queue: Question[];
   questions: Question[];
   isLoading: boolean;
-  getNextInQueue: () => Question | undefined;
+  getNextInQueue: (arg0: () => void) => Question | undefined;
 };
 
 const QuestionsContext = createContext<QuestionsContextType | undefined>(
@@ -24,7 +24,6 @@ function QuestionsProvider({ children }: { children: React.ReactNode }) {
   const { data, isLoading } = api.questions.getAll.useQuery();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [queue, setQueue] = useState<Question[]>([]);
-  const [busyQueue, setBusyQueue] = useState<{ (): void }[]>([]);
   const queueRef = useRef<Question[]>();
   const busyRef = useRef(false);
   queueRef.current = queue;
@@ -37,38 +36,19 @@ function QuestionsProvider({ children }: { children: React.ReactNode }) {
     }
   }, [data, questions.length]);
 
-  const executeQueue = () => {
-    if (busyQueue.length > 0) {
-      const nextFunction = busyQueue.shift();
-      if (nextFunction) {
-        nextFunction();
-      }
-    }
-  };
-
-  const getNextInQueue = () => {
-    if (busyRef.current) {
-      setBusyQueue((curr) => [...curr, getNextInQueue]);
-    } else {
-      if (queueRef.current) {
-        busyRef.current = true;
-        const currQueue = [...queueRef.current];
-        const nextInQueue = currQueue.shift();
-        if (nextInQueue) {
-          currQueue.push(nextInQueue);
-          setQueue(currQueue);
-          busyRef.current = false;
-          executeQueue();
-          return nextInQueue;
-        }
+  const getNextInQueue = (callback: () => void) => {
+    if (queueRef.current) {
+      busyRef.current = true;
+      const currQueue = [...queueRef.current];
+      const nextInQueue = currQueue.shift();
+      if (nextInQueue) {
+        currQueue.push(nextInQueue);
+        setQueue(currQueue);
         busyRef.current = false;
-        executeQueue();
+        callback();
+        return nextInQueue;
       }
     }
-  };
-
-  const getInitialQuestion = (pos: number) => {
-    queueRef.current;
   };
 
   const value = {

@@ -1,10 +1,10 @@
 import type { Question } from "@prisma/client";
 import type { AnimationPlaybackControls } from "framer-motion";
 import { AnimatePresence, motion } from "framer-motion";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useAnimate } from "framer-motion";
 import { CheckCircle, Copy, Pause, Play, SkipNext } from "iconoir-react";
-import copy from "copy-to-clipboard";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useQuestions } from "~/context/useQuestions";
 
 const Drop: React.FC<{ onLoad: () => void }> = ({ onLoad }) => {
@@ -13,23 +13,24 @@ const Drop: React.FC<{ onLoad: () => void }> = ({ onLoad }) => {
   const [started, setStarted] = useState(true);
   const [copied, setCopied] = useState(false);
   const [question, setQuestion] = useState<Question | undefined>(undefined);
-  const [mounted, setMounted] = useState<boolean>(false);
+  // const [mounted, setMounted] = useState<boolean>(false);
+  const questionRef = useRef<Question | undefined>(undefined);
+  questionRef.current = question;
 
   const { getNextInQueue } = useQuestions();
 
   const getNext = useCallback(() => {
-    setQuestion(getNextInQueue());
+    setQuestion(getNextInQueue(onLoad));
   }, [getNextInQueue]);
 
-  useEffect(() => {
-    if (!mounted) {
-      setMounted(true);
-    }
-    if (mounted) {
-      onLoad();
-      // getNext();
-    }
-  }, [mounted, onLoad]);
+  // useEffect(() => {
+  //   if (!mounted) {
+  //     setMounted(true);
+  //   }
+  //   if (mounted) {
+  //     onLoad();
+  //   }
+  // }, [mounted, onLoad]);
 
   const toggleTimer = () => {
     if (started) {
@@ -50,12 +51,13 @@ const Drop: React.FC<{ onLoad: () => void }> = ({ onLoad }) => {
   };
 
   useEffect(() => {
+    animation?.cancel();
     setAnimation(
       animate(
         "span",
         { width: 0 },
         {
-          duration: Number(question?.timeout || 0) / 1000,
+          duration: Number(questionRef.current?.timeout || 0) / 1000,
           ease: "linear",
           onUpdate: (latest) => {
             if (latest <= 0.01) {
@@ -66,7 +68,7 @@ const Drop: React.FC<{ onLoad: () => void }> = ({ onLoad }) => {
       )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [question]);
+  }, [questionRef.current]);
 
   return (
     <AnimatePresence mode="popLayout">
@@ -75,16 +77,16 @@ const Drop: React.FC<{ onLoad: () => void }> = ({ onLoad }) => {
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: 500 }}
         transition={{ duration: 0.75, type: "spring" }}
-        key={question?.id}
+        key={questionRef.current?.id}
       >
         <div
           ref={ref}
-          key={question?.id}
-          id={question?.id}
+          key={questionRef.current?.id}
+          id={questionRef.current?.id}
           className="relative w-full overflow-hidden rounded-2xl border-2 border-secondary bg-gradient-to-br from-base-300 to-base-100 p-4 pb-2"
         >
           <span className="absolute top-0 left-0 h-2 w-full bg-gradient-to-tr from-primary to-secondary"></span>
-          <p className="w-full">{question?.question}</p>
+          <p className="w-full">{questionRef.current?.question}</p>
           <div className="flex w-full justify-end gap-1">
             <button
               className="btn-sm btn px-1 hover:btn-info"
@@ -92,14 +94,14 @@ const Drop: React.FC<{ onLoad: () => void }> = ({ onLoad }) => {
             >
               <SkipNext />
             </button>
-            <button
-              className="btn-sm btn px-1 hover:btn-secondary"
-              onClick={() =>
-                copy(question?.question || "", { onCopy: handleCopy })
-              }
+            <CopyToClipboard
+              text={questionRef.current?.question}
+              onCopy={() => handleCopy()}
             >
-              {copied ? <CheckCircle /> : <Copy />}
-            </button>
+              <button className="btn-sm btn px-1 hover:btn-secondary">
+                {copied ? <CheckCircle /> : <Copy />}
+              </button>
+            </CopyToClipboard>
             <button
               className="btn-sm btn px-1 hover:btn-primary"
               onClick={() => toggleTimer()}
