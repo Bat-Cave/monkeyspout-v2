@@ -1,7 +1,7 @@
 import type { Question } from "@prisma/client";
 import type { AnimationPlaybackControls } from "framer-motion";
 import { AnimatePresence, motion } from "framer-motion";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAnimate } from "framer-motion";
 import { CheckCircle, Copy, Pause, Play, SkipNext } from "iconoir-react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -13,7 +13,6 @@ const Drop: React.FC<{ onLoad: () => void }> = ({ onLoad }) => {
   const [started, setStarted] = useState(true);
   const [copied, setCopied] = useState(false);
   const [question, setQuestion] = useState<Question | undefined>(undefined);
-  // const [mounted, setMounted] = useState<boolean>(false);
   const questionRef = useRef<Question | undefined>(undefined);
   questionRef.current = question;
 
@@ -28,6 +27,7 @@ const Drop: React.FC<{ onLoad: () => void }> = ({ onLoad }) => {
     if (!isLoading && !question) {
       getNext();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, queue]);
 
   const toggleTimer = () => {

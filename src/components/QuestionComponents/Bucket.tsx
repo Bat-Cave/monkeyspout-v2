@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import useMeasure from "react-use-measure";
 import Drop from "./Drop";
 import { useQuestions } from "~/context/useQuestions";
+import Loading from "../Loading";
 
 const Bucket: React.FC<{ dropCount?: number }> = ({ dropCount = 1 }) => {
   const [ref, bounds] = useMeasure();
@@ -44,7 +45,7 @@ const Bucket: React.FC<{ dropCount?: number }> = ({ dropCount = 1 }) => {
               );
             })
           ) : (
-            <>Loading</>
+            <Loading />
           )}
         </AnimatePresence>
       </div>
