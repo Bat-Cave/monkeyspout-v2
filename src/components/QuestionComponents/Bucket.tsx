@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useMeasure from "react-use-measure";
 import Drop from "./Drop";
@@ -6,13 +6,16 @@ import { useQuestions } from "~/context/useQuestions";
 
 const Bucket: React.FC<{ dropCount?: number }> = ({ dropCount = 1 }) => {
   const [ref, bounds] = useMeasure();
-  const [dropsCreated, setDropsCreated] = useState<number[]>([1]);
+  const [dropsCreated, setDropsCreated] = useState<number[] | undefined>([0]);
+  const dropsRef = useRef<number[] | undefined>();
+  dropsRef.current = dropsCreated;
 
   const { isLoading } = useQuestions();
 
-  const dropLoaded = () => {
-    if (dropsCreated.length < dropCount) {
-      setDropsCreated((curr) => [...curr, curr.length]);
+  const dropLoaded = (i: number) => {
+    if (dropsRef.current && dropsRef.current?.length < dropCount) {
+      dropsRef.current?.push(i);
+      setDropsCreated(dropsRef.current);
     }
   };
 
@@ -27,7 +30,7 @@ const Bucket: React.FC<{ dropCount?: number }> = ({ dropCount = 1 }) => {
       >
         <AnimatePresence mode="popLayout">
           {!isLoading ? (
-            dropsCreated.map((_, i) => {
+            dropsCreated?.map((_, i) => {
               return (
                 <motion.div
                   initial={{ opacity: 0, x: -500 }}
@@ -36,7 +39,7 @@ const Bucket: React.FC<{ dropCount?: number }> = ({ dropCount = 1 }) => {
                   transition={{ duration: 0.75, type: "spring" }}
                   key={`drop-${i}`}
                 >
-                  <Drop onLoad={() => dropLoaded()} />
+                  <Drop onLoad={() => dropLoaded(i + 1)} />
                 </motion.div>
               );
             })

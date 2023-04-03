@@ -17,20 +17,18 @@ const Drop: React.FC<{ onLoad: () => void }> = ({ onLoad }) => {
   const questionRef = useRef<Question | undefined>(undefined);
   questionRef.current = question;
 
-  const { getNextInQueue } = useQuestions();
+  const { getNextInQueue, isLoading, queue } = useQuestions();
 
-  const getNext = useCallback(() => {
-    setQuestion(getNextInQueue(onLoad));
-  }, [getNextInQueue]);
+  const getNext = () => {
+    const nextQ = getNextInQueue(onLoad);
+    setQuestion(nextQ);
+  };
 
-  // useEffect(() => {
-  //   if (!mounted) {
-  //     setMounted(true);
-  //   }
-  //   if (mounted) {
-  //     onLoad();
-  //   }
-  // }, [mounted, onLoad]);
+  useEffect(() => {
+    if (!isLoading && !question) {
+      getNext();
+    }
+  }, [isLoading, queue]);
 
   const toggleTimer = () => {
     if (started) {
@@ -95,7 +93,7 @@ const Drop: React.FC<{ onLoad: () => void }> = ({ onLoad }) => {
               <SkipNext />
             </button>
             <CopyToClipboard
-              text={questionRef.current?.question}
+              text={questionRef.current?.question || ""}
               onCopy={() => handleCopy()}
             >
               <button className="btn-sm btn px-1 hover:btn-secondary">

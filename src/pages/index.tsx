@@ -19,7 +19,7 @@ const Home: NextPage = () => {
           </span>
           when you need them
         </h1>
-        <Bucket dropCount={1} />
+        <Bucket dropCount={3} />
       </Layout>
     </>
   );

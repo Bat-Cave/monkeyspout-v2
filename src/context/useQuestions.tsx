@@ -25,7 +25,6 @@ function QuestionsProvider({ children }: { children: React.ReactNode }) {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [queue, setQueue] = useState<Question[]>([]);
   const queueRef = useRef<Question[]>();
-  const busyRef = useRef(false);
   queueRef.current = queue;
 
   useEffect(() => {
@@ -37,18 +36,20 @@ function QuestionsProvider({ children }: { children: React.ReactNode }) {
   }, [data, questions.length]);
 
   const getNextInQueue = (callback: () => void) => {
+    let res;
     if (queueRef.current) {
-      busyRef.current = true;
       const currQueue = [...queueRef.current];
       const nextInQueue = currQueue.shift();
       if (nextInQueue) {
         currQueue.push(nextInQueue);
+        queueRef.current = currQueue;
         setQueue(currQueue);
-        busyRef.current = false;
-        callback();
-        return nextInQueue;
+        res = nextInQueue;
       }
     }
+
+    callback();
+    return res;
   };
 
   const value = {
