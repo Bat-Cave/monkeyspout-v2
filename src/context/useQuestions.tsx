@@ -22,6 +22,8 @@ const QuestionsContext = createContext<QuestionsContextType | undefined>(
 
 function QuestionsProvider({ children }: { children: React.ReactNode }) {
   const { data, isLoading } = api.questions.getAll.useQuery();
+  // const filtered = api.questions.getAllByFilter.useQuery("test");
+
   const [questions, setQuestions] = useState<Question[]>([]);
   const [queue, setQueue] = useState<Question[]>([]);
   const queueRef = useRef<Question[]>();

@@ -3,9 +3,17 @@ import type { AnimationPlaybackControls } from "framer-motion";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useAnimate } from "framer-motion";
-import { CheckCircle, Copy, Pause, Play, SkipNext } from "iconoir-react";
+import {
+  CheckCircle,
+  Copy,
+  Pause,
+  Play,
+  SkipNext,
+  TriangleFlag,
+} from "iconoir-react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useQuestions } from "~/context/useQuestions";
+import { getCategoryColor } from "~/utils/quesitons";
 
 const Drop: React.FC<{ onLoad: () => void }> = ({ onLoad }) => {
   const [ref, animate] = useAnimate();
@@ -52,7 +60,7 @@ const Drop: React.FC<{ onLoad: () => void }> = ({ onLoad }) => {
     animation?.cancel();
     setAnimation(
       animate(
-        "span",
+        ".absolute",
         { width: 0 },
         {
           duration: Number(questionRef.current?.timeout || 0) / 1000,
@@ -67,6 +75,10 @@ const Drop: React.FC<{ onLoad: () => void }> = ({ onLoad }) => {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questionRef.current]);
+
+  console.log({
+    "questionRef.current": questionRef.current?.category.split(","),
+  });
 
   return (
     <AnimatePresence mode="popLayout">
@@ -85,27 +97,52 @@ const Drop: React.FC<{ onLoad: () => void }> = ({ onLoad }) => {
         >
           <span className="absolute top-0 left-0 h-2 w-full bg-gradient-to-tr from-primary to-secondary"></span>
           <p className="w-full">{questionRef.current?.question}</p>
-          <div className="flex w-full justify-end gap-1">
-            <button
-              className="btn-sm btn px-1 hover:btn-info"
-              onClick={() => getNext()}
-            >
-              <SkipNext />
-            </button>
-            <CopyToClipboard
-              text={questionRef.current?.question || ""}
-              onCopy={() => handleCopy()}
-            >
-              <button className="btn-sm btn px-1 hover:btn-secondary">
-                {copied ? <CheckCircle /> : <Copy />}
+          <div className="mt-2 flex w-full justify-between">
+            <div className="flex w-full items-center gap-3">
+              {questionRef.current?.category
+                .split(",")
+                .sort()
+                .map((cat) => {
+                  const color = getCategoryColor(cat);
+                  return (
+                    <div
+                      className="flex h-5 items-center gap-1 rounded-md py-0 px-3 text-xs opacity-60 transition-opacity hover:opacity-100"
+                      key={`${questionRef.current?.id}-${cat}`}
+                      style={{ border: `1px solid ${color}` }}
+                    >
+                      {cat}
+                    </div>
+                  );
+                })}
+            </div>
+            <div className="flex justify-end gap-1">
+              <button
+                className="btn-sm btn px-1 opacity-60 transition-all hover:btn-error hover:opacity-100"
+                onClick={() => window.alert("need to add flagging ability")}
+              >
+                <TriangleFlag />
               </button>
-            </CopyToClipboard>
-            <button
-              className="btn-sm btn px-1 hover:btn-primary"
-              onClick={() => toggleTimer()}
-            >
-              {started ? <Pause /> : <Play />}
-            </button>
+              <button
+                className="btn-sm btn px-1 opacity-60 transition-all hover:btn-info hover:opacity-100"
+                onClick={() => getNext()}
+              >
+                <SkipNext />
+              </button>
+              <CopyToClipboard
+                text={questionRef.current?.question || ""}
+                onCopy={() => handleCopy()}
+              >
+                <button className="btn-sm btn px-1 opacity-60 transition-all hover:btn-secondary hover:opacity-100">
+                  {copied ? <CheckCircle /> : <Copy />}
+                </button>
+              </CopyToClipboard>
+              <button
+                className="btn-sm btn px-1 opacity-60 transition-all hover:btn-primary hover:opacity-100"
+                onClick={() => toggleTimer()}
+              >
+                {started ? <Pause /> : <Play />}
+              </button>
+            </div>
           </div>
         </div>
       </motion.div>

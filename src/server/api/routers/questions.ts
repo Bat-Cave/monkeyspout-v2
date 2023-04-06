@@ -6,6 +6,11 @@ export const questionsRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.question.findMany();
   }),
+  // getAllByFilter: publicProcedure.input(z.string()).query(({ ctx, input }) => {
+  //   console.log({ ctx, input });
+  //   return [];
+  //   return ctx.prisma.question.findMany();
+  // }),
   create: publicProcedure
     .input(
       z.object({
@@ -22,24 +27,6 @@ export const questionsRouter = createTRPCRouter({
         data: { question, category, type, special, timeout },
       });
 
-      return res;
-    }),
-  generateDefault: publicProcedure
-    .input(
-      z.array(
-        z.object({
-          category: z.string(),
-          type: z.string(),
-          special: z.string(),
-          question: z.string(),
-          timeout: z.string(),
-        })
-      )
-    )
-    .mutation(async ({ ctx, input }) => {
-      const res = await ctx.prisma.question.createMany({
-        data: input,
-      });
       return res;
     }),
 });

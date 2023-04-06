@@ -60,8 +60,8 @@ const AddQuestion: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           onChange={handleInput}
           disabled={isLoading}
         >
-          {categories.map((cat) => (
-            <option key={cat}>{cat}</option>
+          {categories.map(({ label }) => (
+            <option key={label}>{label}</option>
           ))}
         </select>
       </div>
