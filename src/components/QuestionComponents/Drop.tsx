@@ -107,7 +107,7 @@ const Drop: React.FC<{ onLoad: () => void }> = ({ onLoad }) => {
                   return (
                     <div
                       className="flex h-5 items-center gap-1 rounded-md py-0 px-3 text-xs opacity-60 transition-opacity hover:opacity-100"
-                      key={`${questionRef.current?.id}-${cat}`}
+                      key={`${questionRef.current?.id || ""}-${cat}`}
                       style={{ border: `1px solid ${color}` }}
                     >
                       {cat}
