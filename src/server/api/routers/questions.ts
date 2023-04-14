@@ -3,14 +3,31 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const questionsRouter = createTRPCRouter({
+  getCount: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.question.count();
+  }),
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.question.findMany();
   }),
-  // getAllByFilter: publicProcedure.input(z.string()).query(({ ctx, input }) => {
-  //   console.log({ ctx, input });
-  //   return [];
-  //   return ctx.prisma.question.findMany();
-  // }),
+  getByFilter: publicProcedure.input(z.string()).query(({ ctx, input }) => {
+    const categories = input
+      .split(",")
+      .sort()
+      .filter((cat) => cat !== "");
+    const catQuery = categories.map((cat) => ({ category: { contains: cat } }));
+
+    if (categories.length === 0) {
+      return ctx.prisma.question.findMany();
+    }
+
+    return ctx.prisma.question.findMany({
+      where: {
+        NOT: {
+          OR: catQuery,
+        },
+      },
+    });
+  }),
   create: publicProcedure
     .input(
       z.object({

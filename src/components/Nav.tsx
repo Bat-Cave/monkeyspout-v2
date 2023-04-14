@@ -8,7 +8,7 @@ const Nav: React.FC = () => {
   const role = user?.organizationMemberships[0]?.role;
   const isAdmin = role === "admin";
   return (
-    <nav className="fixed top-0 z-50 flex h-20 w-full justify-center bg-gradient-to-tr from-primary-focus to-primary px-2 md:px-12">
+    <nav className="fixed top-0 z-50 flex h-20 w-full justify-center px-2 backdrop-blur-sm md:px-12">
       <div className="flex w-full items-center justify-between md:max-w-7xl">
         <Link href="/" className="flex items-center font-bold">
           <Image
@@ -21,6 +21,9 @@ const Nav: React.FC = () => {
           <p className="ml-2 hidden text-4xl md:block">Monkey Spout</p>
         </Link>
         <div className="flex items-center gap-3">
+          <Link href="/widget/create" className="btn-primary btn">
+            Create Widget
+          </Link>
           {!isSignedIn && (
             <SignInButton>
               <div className="btn">Sign In</div>

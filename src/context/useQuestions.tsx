@@ -14,6 +14,7 @@ type QuestionsContextType = {
   questions: Question[];
   isLoading: boolean;
   getNextInQueue: (arg0: () => void) => Question | undefined;
+  setFilter: (arg0: string) => void;
 };
 
 const QuestionsContext = createContext<QuestionsContextType | undefined>(
@@ -21,8 +22,8 @@ const QuestionsContext = createContext<QuestionsContextType | undefined>(
 );
 
 function QuestionsProvider({ children }: { children: React.ReactNode }) {
-  const { data, isLoading } = api.questions.getAll.useQuery();
-  // const filtered = api.questions.getAllByFilter.useQuery("test");
+  const [filter, setFilter] = useState("");
+  const { data, isLoading } = api.questions.getByFilter.useQuery(filter);
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [queue, setQueue] = useState<Question[]>([]);
@@ -30,12 +31,12 @@ function QuestionsProvider({ children }: { children: React.ReactNode }) {
   queueRef.current = queue;
 
   useEffect(() => {
-    if (data?.length && !questions.length) {
+    if (data?.length) {
       setQuestions(data);
       const shuffledData = shuffle(data);
       setQueue(shuffledData);
     }
-  }, [data, questions.length]);
+  }, [data]);
 
   const getNextInQueue = (callback: () => void) => {
     let res;
@@ -59,6 +60,7 @@ function QuestionsProvider({ children }: { children: React.ReactNode }) {
     questions,
     isLoading,
     getNextInQueue,
+    setFilter,
   };
 
   return (

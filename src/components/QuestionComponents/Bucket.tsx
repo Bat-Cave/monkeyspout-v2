@@ -1,29 +1,103 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useMeasure from "react-use-measure";
 import Drop from "./Drop";
 import { useQuestions } from "~/context/useQuestions";
 import Loading from "../Loading";
+import type { SizeType } from "~/pages/widget";
 
-const Bucket: React.FC<{ dropCount?: number }> = ({ dropCount = 1 }) => {
+export type BucketConfig = {
+  dropCount?: number;
+  size?: SizeType;
+  excludedCategories?: string[];
+  showCategories?: boolean;
+  showSkip?: boolean;
+  showCopy?: boolean;
+  showPlayPause?: boolean;
+  backgroundColor?: string;
+  backgroundColorEnd?: string;
+  textColor?: string;
+  borderColor?: string;
+  countdownBarColor?: string;
+  countdownBarEndColor?: string;
+};
+
+export const defaultBucketConfig: BucketConfig = {
+  dropCount: 3,
+  size: "normal",
+  excludedCategories: [""],
+  showCategories: true,
+  showSkip: true,
+  showCopy: true,
+  showPlayPause: true,
+  backgroundColor: "#20252E",
+  backgroundColorEnd: "#2A303C",
+  textColor: "#f1f5f9",
+  borderColor: "#d926aa",
+  countdownBarColor: "#661ae6",
+  countdownBarEndColor: "#d926aa",
+};
+
+const Bucket: React.FC<BucketConfig> = ({
+  dropCount = defaultBucketConfig.dropCount || 3,
+  size = defaultBucketConfig.size || "normal",
+  excludedCategories = defaultBucketConfig.excludedCategories || [""],
+  showCategories = defaultBucketConfig.showCategories,
+  showSkip = defaultBucketConfig.showSkip,
+  showCopy = defaultBucketConfig.showCopy,
+  showPlayPause = defaultBucketConfig.showPlayPause,
+  backgroundColor = defaultBucketConfig.backgroundColor,
+  backgroundColorEnd = defaultBucketConfig.backgroundColorEnd,
+  textColor = defaultBucketConfig.textColor,
+  borderColor = defaultBucketConfig.borderColor,
+  countdownBarColor = defaultBucketConfig.countdownBarColor,
+  countdownBarEndColor = defaultBucketConfig.countdownBarEndColor,
+}) => {
   const [ref, bounds] = useMeasure();
-  const [dropsCreated, setDropsCreated] = useState<number[] | undefined>([0]);
+  const [dropsCreated, setDropsCreated] = useState<number[] | undefined>([
+    Date.now(),
+  ]);
   const dropsRef = useRef<number[] | undefined>();
   dropsRef.current = dropsCreated;
 
-  const { isLoading } = useQuestions();
+  const { isLoading, setFilter } = useQuestions();
 
-  const dropLoaded = (i: number) => {
+  const dropLoaded = () => {
     if (dropsRef.current && dropsRef.current?.length < dropCount) {
-      dropsRef.current?.push(i);
-      setDropsCreated(dropsRef.current);
+      setDropsCreated([...dropsRef.current, Date.now()]);
     }
+  };
+
+  useEffect(() => {
+    setFilter(excludedCategories?.join(","));
+  }, [excludedCategories, setFilter]);
+
+  useEffect(() => {
+    if (dropsRef.current?.length !== dropCount) {
+      const diff = dropCount - (dropsRef.current?.length || 0);
+      if (diff > 0) {
+        setDropsCreated([...(dropsCreated || []), Date.now()]);
+      }
+      if (diff < 0) {
+        const updatedDropsCreated = [...(dropsCreated || [])];
+        updatedDropsCreated.pop();
+        setDropsCreated(updatedDropsCreated);
+      }
+    }
+  }, [dropCount, dropsRef.current?.length, dropsCreated]);
+
+  const maxWidthMap = {
+    small: "max-w-xs",
+    normal: "max-w-md",
+    large: "max-w-xl",
+    "extra large": "max-w-4xl",
   };
 
   return (
     <motion.div
       animate={{ height: bounds.height }}
-      className="w-full max-w-lg overflow-hidden "
+      transition={{ type: "linear", duration: 0.25 }}
+      className={`w-full overflow-hidden ${maxWidthMap[size]}`}
     >
       <div
         ref={ref}
@@ -31,16 +105,29 @@ const Bucket: React.FC<{ dropCount?: number }> = ({ dropCount = 1 }) => {
       >
         <AnimatePresence mode="popLayout">
           {!isLoading ? (
-            dropsCreated?.map((_, i) => {
+            dropsRef.current?.map((d) => {
               return (
                 <motion.div
                   initial={{ opacity: 0, x: -500 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 500 }}
-                  transition={{ duration: 0.75, type: "spring" }}
-                  key={`drop-${i}`}
+                  transition={{ type: "spring" }}
+                  key={`drop-${d}`}
                 >
-                  <Drop onLoad={() => dropLoaded(i + 1)} />
+                  <Drop
+                    onLoad={() => dropLoaded()}
+                    size={size}
+                    showCategories={showCategories}
+                    showSkip={showSkip}
+                    showCopy={showCopy}
+                    showPlayPause={showPlayPause}
+                    backgroundColor={backgroundColor}
+                    backgroundColorEnd={backgroundColorEnd}
+                    textColor={textColor}
+                    borderColor={borderColor}
+                    countdownBarColor={countdownBarColor}
+                    countdownBarEndColor={countdownBarEndColor}
+                  />
                 </motion.div>
               );
             })
