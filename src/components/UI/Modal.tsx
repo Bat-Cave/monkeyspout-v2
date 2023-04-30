@@ -1,15 +1,17 @@
 import { Cancel } from "iconoir-react";
-import type { PropsWithChildren } from "react";
+import type { PropsWithChildren, ReactElement } from "react";
 
 const Modal: React.FC<
   PropsWithChildren & {
-    buttonText: string;
+    buttonText?: string;
+    showButton?: boolean;
     title: string;
     isOpen: boolean;
     setIsOpen: (arg0: boolean) => void;
   }
 > = ({
   buttonText = "Open Modal",
+  showButton = true,
   title = "",
   isOpen = false,
   setIsOpen,
@@ -17,10 +19,11 @@ const Modal: React.FC<
 }) => {
   return (
     <>
-      <button className="btn-primary btn" onClick={() => setIsOpen(!isOpen)}>
-        {buttonText}
-      </button>
-
+      {showButton ? (
+        <button className="btn-primary btn" onClick={() => setIsOpen(!isOpen)}>
+          {buttonText}
+        </button>
+      ) : null}
       <input
         checked={isOpen}
         type="checkbox"

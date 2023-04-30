@@ -4,7 +4,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap");
 
 body {
-  @apply bg-base-300 text-slate-100;
+  @apply overflow-x-hidden bg-base-300 text-slate-100;
 }
 
 .hexBackground {
@@ -30,4 +30,8 @@ body {
 .thin-scrollbar *::-webkit-scrollbar-thumb {
   background-color: rgb(102, 26, 230);
   border-radius: 2px;
+}
+
+.animated-container * {
+  @apply bg-gradient-to-b from-primary to-secondary bg-clip-text  text-transparent;
 }

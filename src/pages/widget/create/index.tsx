@@ -114,7 +114,7 @@ const Widget: React.FC = () => {
         <meta name="description" content="" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout>
+      <Layout className="items-center">
         <div className="mx-6 flex w-full flex-col items-center gap-2">
           Your widget url:
           <CopyToClipboard text={url} onCopy={() => handleCopy()}>
@@ -132,10 +132,10 @@ const Widget: React.FC = () => {
             </div>
           </CopyToClipboard>
         </div>
-        <div className="thin-scrollbar flex h-full w-full items-start justify-center gap-5 pt-6">
-          <div className="max-h-[calc(100vh-216px)] w-full max-w-sm overflow-y-auto border-r border-base-content pb-40 pr-2">
-            <h1 className="sticky top-0 z-40 w-full bg-base-300 text-left font-extrabold shadow-md">
-              <span className="mr-2 block bg-gradient-to-r from-primary to-secondary bg-clip-text py-3 text-2xl text-transparent md:text-5xl">
+        <div className="thin-scrollbar flex h-full w-full flex-col-reverse items-start justify-center gap-5 pt-6 pb-4 md:flex-row">
+          <div className="max-h-[unset] w-full max-w-none overflow-y-auto border-base-content pb-40 pr-2 md:max-h-[calc(100vh-300px)] md:max-w-md md:border-r">
+            <h1 className="sticky top-0 z-40 w-full bg-base-300 text-left font-extrabold md:shadow-md">
+              <span className="block bg-gradient-to-r from-primary to-secondary bg-clip-text py-3 text-2xl text-transparent md:text-5xl">
                 Widget Maker
               </span>
             </h1>

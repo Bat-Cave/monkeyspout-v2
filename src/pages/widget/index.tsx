@@ -19,6 +19,8 @@ const Widget: React.FC = () => {
     parseBooleans: true,
   });
 
+  console.log({ queryParams });
+
   return (
     <>
       <Head>
@@ -26,7 +28,7 @@ const Widget: React.FC = () => {
         <meta name="description" content="" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="flex h-screen w-full flex-col items-center justify-center">
+      <div className="flex min-h-screen w-full flex-col items-center justify-center">
         <Bucket {...queryParams} />
         <Link
           href="/"

@@ -21,6 +21,7 @@ import SmoothMount from "../UI/SmoothMount";
 
 const Drop: React.FC<{
   onLoad: () => void;
+  onFlagClick: (arg0: Question | null) => void;
   size?: SizeType;
   showCategories?: boolean;
   showSkip?: boolean;
@@ -34,6 +35,7 @@ const Drop: React.FC<{
   countdownBarEndColor?: string;
 }> = ({
   onLoad,
+  onFlagClick,
   size = "normal",
   showCategories = defaultBucketConfig.showCategories,
   showSkip = defaultBucketConfig.showSkip,
@@ -83,6 +85,11 @@ const Drop: React.FC<{
     setStarted(!started);
   };
 
+  const stopTimer = () => {
+    animation?.pause();
+    setStarted(false);
+  };
+
   const handleCopy = () => {
     if (!copied) {
       setCopied(true);
@@ -117,6 +124,11 @@ const Drop: React.FC<{
     normal: "text-base",
     large: "text-2xl",
     "extra large": "text-5xl",
+  };
+
+  const handleFlagClick = () => {
+    onFlagClick(questionRef.current || null);
+    stopTimer();
   };
 
   return (
@@ -187,7 +199,7 @@ const Drop: React.FC<{
               <SmoothMount show={isAdmin}>
                 <button
                   className="btn-sm btn mr-1 px-1 opacity-60 transition-all hover:btn-error hover:opacity-100"
-                  onClick={() => window.alert("need to add flagging ability")}
+                  onClick={() => handleFlagClick()}
                 >
                   <TriangleFlag />
                 </button>

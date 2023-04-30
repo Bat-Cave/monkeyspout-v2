@@ -20,4 +20,18 @@ model Question {
     type      String   @db.VarChar(255)
     special   String   @db.VarChar(255)
     timeout   String   @db.VarChar(255)
+    Flag      Flag[]
+}
+
+model Flag {
+    flagId      Int      @id @default(autoincrement())
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    question    Question @relation(fields: [questionId], references: [id])
+    questionId  String   @db.VarChar(255)
+    issue       String   @db.VarChar(255)
+    description String   @db.Text
+    resolved    Boolean
+
+    @@index(questionId)
 }

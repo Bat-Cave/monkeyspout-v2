@@ -1,27 +1,41 @@
-import React, { useState } from "react";
+import type { Question } from "@prisma/client";
+import React, { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { categories, specials, types } from "~/utils/quesitons";
 import { toast } from "react-hot-toast";
 
-const AddQuestion: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+const EditQuestion: React.FC<{ q: Question | null; onClose: () => void }> = ({
+  q,
+  onClose,
+}) => {
   const [{ question, category, type, special, timeout }, setValues] = useState({
-    question: "",
-    category: "",
-    type: "",
-    special: "",
-    timeout: "0",
+    question: q?.question || "",
+    category: q?.category || "",
+    type: q?.type || "",
+    special: q?.special || "",
+    timeout: Number(q?.timeout) / 1000,
   });
+
+  useEffect(() => {
+    setValues({
+      question: q?.question || "",
+      category: q?.category || "",
+      type: q?.type || "",
+      special: q?.special || "",
+      timeout: Number(q?.timeout) / 1000,
+    });
+  }, [q]);
 
   const ctx = api.useContext();
 
-  const { mutate, isLoading } = api.questions.create.useMutation({
+  const { mutate, isLoading } = api.questions.updateById.useMutation({
     onSuccess: () => {
-      toast.success("Successfully created question");
+      toast.success("Successfully updated question");
       onClose();
       void ctx.questions.getAll.invalidate();
     },
     onError: (e) => {
-      toast.error("There was an error creating that question");
+      toast.error("There was an error updating that question");
       console.warn(e);
     },
   });
@@ -33,6 +47,7 @@ const AddQuestion: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   const handleSubmit = () => {
     void mutate({
+      id: q?.id || "",
       question,
       category,
       type,
@@ -123,10 +138,10 @@ const AddQuestion: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       </div>
       <br />
       <button className="btn-primary btn" onClick={() => handleSubmit()}>
-        Add Question
+        Edit Question
       </button>
     </div>
   );
 };
 
-export default AddQuestion;
+export default EditQuestion;

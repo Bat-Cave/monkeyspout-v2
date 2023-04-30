@@ -46,4 +46,25 @@ export const questionsRouter = createTRPCRouter({
 
       return res;
     }),
+  updateById: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        category: z.string(),
+        type: z.string(),
+        special: z.string(),
+        question: z.string(),
+        timeout: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, category, type, special, question, timeout } = input;
+
+      const updatedQuestion = await ctx.prisma.question.update({
+        where: { id: id.toString() },
+        data: { category, type, special, question, timeout },
+      });
+
+      return updatedQuestion;
+    }),
 });

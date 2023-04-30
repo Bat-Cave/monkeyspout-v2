@@ -1,12 +1,15 @@
+import type { Question } from "@prisma/client";
+import type { SizeType } from "~/pages/widget";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useMeasure from "react-use-measure";
 import Drop from "./Drop";
 import { useQuestions } from "~/context/useQuestions";
 import Loading from "../Loading";
-import type { SizeType } from "~/pages/widget";
+import FlagQuestionModal from "./FlagQuestionModal";
 
 export type BucketConfig = {
+  onLoad?: () => void;
   dropCount?: number;
   size?: SizeType;
   excludedCategories?: string[];
@@ -39,6 +42,7 @@ export const defaultBucketConfig: BucketConfig = {
 };
 
 const Bucket: React.FC<BucketConfig> = ({
+  onLoad = () => null,
   dropCount = defaultBucketConfig.dropCount || 3,
   size = defaultBucketConfig.size || "normal",
   excludedCategories = defaultBucketConfig.excludedCategories || [""],
@@ -53,6 +57,8 @@ const Bucket: React.FC<BucketConfig> = ({
   countdownBarColor = defaultBucketConfig.countdownBarColor,
   countdownBarEndColor = defaultBucketConfig.countdownBarEndColor,
 }) => {
+  const [flaggedQuestion, setFlaggedQuestion] = useState<Question | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [ref, bounds] = useMeasure();
   const [dropsCreated, setDropsCreated] = useState<number[] | undefined>([
     Date.now(),
@@ -67,6 +73,12 @@ const Bucket: React.FC<BucketConfig> = ({
       setDropsCreated([...dropsRef.current, Date.now()]);
     }
   };
+
+  useEffect(() => {
+    if (!isLoading) {
+      onLoad();
+    }
+  }, [isLoading, onLoad]);
 
   useEffect(() => {
     setFilter(excludedCategories?.join(","));
@@ -93,50 +105,66 @@ const Bucket: React.FC<BucketConfig> = ({
     "extra large": "max-w-4xl",
   };
 
+  const onFlag = (q: Question | null) => {
+    if (q) {
+      setFlaggedQuestion(q);
+      setIsOpen(true);
+    }
+  };
+
   return (
-    <motion.div
-      animate={{ height: bounds.height }}
-      transition={{ type: "linear", duration: 0.25 }}
-      className={`w-full overflow-hidden ${maxWidthMap[size]}`}
-    >
-      <div
-        ref={ref}
-        className="card flex w-full flex-col gap-4 border-2 border-slate-400 p-4"
+    <>
+      <motion.div
+        animate={{ height: bounds.height }}
+        transition={{ type: "linear", duration: 0.25 }}
+        className={`w-full overflow-hidden ${maxWidthMap[size]}`}
       >
-        <AnimatePresence mode="popLayout">
-          {!isLoading ? (
-            dropsRef.current?.map((d) => {
-              return (
-                <motion.div
-                  initial={{ opacity: 0, x: -500 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 500 }}
-                  transition={{ type: "spring" }}
-                  key={`drop-${d}`}
-                >
-                  <Drop
-                    onLoad={() => dropLoaded()}
-                    size={size}
-                    showCategories={showCategories}
-                    showSkip={showSkip}
-                    showCopy={showCopy}
-                    showPlayPause={showPlayPause}
-                    backgroundColor={backgroundColor}
-                    backgroundColorEnd={backgroundColorEnd}
-                    textColor={textColor}
-                    borderColor={borderColor}
-                    countdownBarColor={countdownBarColor}
-                    countdownBarEndColor={countdownBarEndColor}
-                  />
-                </motion.div>
-              );
-            })
-          ) : (
-            <Loading />
-          )}
-        </AnimatePresence>
-      </div>
-    </motion.div>
+        <div
+          ref={ref}
+          className="card flex w-full flex-col gap-4 border-2 border-slate-400 p-4"
+        >
+          <AnimatePresence mode="popLayout">
+            {!isLoading ? (
+              dropsRef.current?.map((d) => {
+                return (
+                  <motion.div
+                    initial={{ opacity: 0, x: -500 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 500 }}
+                    transition={{ type: "spring" }}
+                    key={`drop-${d}`}
+                  >
+                    <Drop
+                      onLoad={() => dropLoaded()}
+                      onFlagClick={onFlag}
+                      size={size}
+                      showCategories={showCategories}
+                      showSkip={showSkip}
+                      showCopy={showCopy}
+                      showPlayPause={showPlayPause}
+                      backgroundColor={backgroundColor}
+                      backgroundColorEnd={backgroundColorEnd}
+                      textColor={textColor}
+                      borderColor={borderColor}
+                      countdownBarColor={countdownBarColor}
+                      countdownBarEndColor={countdownBarEndColor}
+                    />
+                  </motion.div>
+                );
+              })
+            ) : (
+              <Loading />
+            )}
+          </AnimatePresence>
+        </div>
+      </motion.div>
+      <FlagQuestionModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        handleClose={() => setIsOpen(false)}
+        question={flaggedQuestion}
+      />
+    </>
   );
 };
 
