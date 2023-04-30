@@ -1,5 +1,5 @@
 import { Cancel } from "iconoir-react";
-import type { PropsWithChildren, ReactElement } from "react";
+import type { PropsWithChildren } from "react";
 
 const Modal: React.FC<
   PropsWithChildren & {

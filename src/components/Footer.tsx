@@ -1,5 +1,3 @@
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
-import { Cancel } from "iconoir-react";
 import Image from "next/image";
 import Link from "next/link";
 import logo from "~/assets/logo.png";

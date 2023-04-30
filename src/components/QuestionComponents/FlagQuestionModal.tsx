@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Modal from "../UI/Modal";
 import FlagQuestion from "./FlagQuestion";
 import type { Question } from "@prisma/client";
