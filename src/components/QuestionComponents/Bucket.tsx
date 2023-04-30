@@ -81,7 +81,7 @@ const Bucket: React.FC<BucketConfig> = ({
   }, [isLoading, onLoad]);
 
   useEffect(() => {
-    setFilter(excludedCategories?.join(","));
+    setFilter([...excludedCategories]?.join(","));
   }, [excludedCategories, setFilter]);
 
   useEffect(() => {
