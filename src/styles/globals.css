@@ -4,7 +4,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap");
 
 body {
-  @apply overflow-x-hidden bg-base-300 text-slate-100;
+  @apply overflow-x-hidden;
 }
 
 .hexBackground {

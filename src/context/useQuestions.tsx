@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { api } from "~/utils/api";
 import { shuffle } from "~/utils/tools";
+import { questions as localQuestions } from "~/utils/quesitons";
 
 type QuestionsContextType = {
   queue: Question[];
@@ -15,6 +16,7 @@ type QuestionsContextType = {
   isLoading: boolean;
   getNextInQueue: (arg0: () => void) => Question | undefined;
   setFilter: (arg0: string) => void;
+  setUseLocalQuestions: (arg0: boolean) => void;
 };
 
 const QuestionsContext = createContext<QuestionsContextType | undefined>(
@@ -23,6 +25,7 @@ const QuestionsContext = createContext<QuestionsContextType | undefined>(
 
 function QuestionsProvider({ children }: { children: React.ReactNode }) {
   const [filter, setFilter] = useState("");
+  const [useLocalQuestions, setUseLocalQuestions] = useState(false);
   const { data, isLoading } = api.questions.getByFilter.useQuery(filter);
 
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -31,12 +34,18 @@ function QuestionsProvider({ children }: { children: React.ReactNode }) {
   queueRef.current = queue;
 
   useEffect(() => {
-    if (data?.length) {
+    if (data?.length && !useLocalQuestions) {
       setQuestions(data);
       const shuffledData = shuffle(data);
       setQueue(shuffledData);
     }
-  }, [data]);
+
+    if (useLocalQuestions) {
+      setQuestions(localQuestions);
+      const shuffledData = shuffle(localQuestions);
+      setQueue(shuffledData);
+    }
+  }, [data, useLocalQuestions]);
 
   const getNextInQueue = (callback: () => void) => {
     let res;
@@ -61,6 +70,7 @@ function QuestionsProvider({ children }: { children: React.ReactNode }) {
     isLoading,
     getNextInQueue,
     setFilter,
+    setUseLocalQuestions,
   };
 
   return (

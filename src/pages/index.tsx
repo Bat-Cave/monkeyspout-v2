@@ -8,6 +8,7 @@ import QuestionSplash from "~/components/QuestionSplash";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import useWindowSize from "~/hooks/useWindowSize";
+import { QuestionsProvider } from "~/context/useQuestions";
 const AnimatedNumbers = dynamic(() => import("react-animated-numbers"), {
   ssr: false,
 });
@@ -59,7 +60,7 @@ const Home: NextPage = () => {
             </span>
             when you need them
           </h1>
-          <Bucket onLoad={() => setLoaded(true)} />
+          <Bucket onLoad={() => setLoaded(true)} useLocalQuestions={true} />
         </section>
 
         <section className="flex min-h-[calc(100vh-80px)] w-full flex-col items-center justify-center gap-4 overflow-hidden font-bold sm:gap-12">
@@ -139,34 +140,37 @@ const Home: NextPage = () => {
                   Narrowed down questions to &quot;Fun&quot; category only
                 </p>
               </div>
-              <Bucket
-                {...{
-                  backgroundColor: "#1FB2A5",
-                  backgroundColorEnd: "#198E84",
-                  borderColor: "#1FB2A5",
-                  countdownBarColor: "#002334",
-                  countdownBarEndColor: "#004a6e",
-                  dropCount: 1,
-                  excludedCategories: [
-                    "Open-ended",
-                    "Philosophical",
-                    "Ethical",
-                    "Career",
-                    "Controversial",
-                    "Creative",
-                    "Hypothetical",
-                    "Knowledge-based",
-                    "Curiosity",
-                    "Personal",
-                    "Opinion-based",
-                    "Relationship",
-                    "Reflective",
-                  ],
-                  showCopy: false,
-                  showPlayPause: false,
-                  textColor: "#002334",
-                }}
-              />
+              <QuestionsProvider>
+                <Bucket
+                  {...{
+                    backgroundColor: "#1FB2A5",
+                    backgroundColorEnd: "#198E84",
+                    borderColor: "#1FB2A5",
+                    countdownBarColor: "#002334",
+                    countdownBarEndColor: "#004a6e",
+                    dropCount: 1,
+                    excludedCategories: [
+                      "Open-ended",
+                      "Philosophical",
+                      "Ethical",
+                      "Career",
+                      "Controversial",
+                      "Creative",
+                      "Hypothetical",
+                      "Knowledge-based",
+                      "Curiosity",
+                      "Personal",
+                      "Opinion-based",
+                      "Relationship",
+                      "Reflective",
+                    ],
+                    showCopy: false,
+                    showPlayPause: false,
+                    textColor: "#002334",
+                    // useLocalQuestions: true,
+                  }}
+                />
+              </QuestionsProvider>
             </div>
             <br />
             <br />

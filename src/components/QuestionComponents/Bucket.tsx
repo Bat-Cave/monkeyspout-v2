@@ -23,6 +23,7 @@ export type BucketConfig = {
   borderColor?: string;
   countdownBarColor?: string;
   countdownBarEndColor?: string;
+  useLocalQuestions?: boolean;
 };
 
 export const defaultBucketConfig: BucketConfig = {
@@ -39,6 +40,7 @@ export const defaultBucketConfig: BucketConfig = {
   borderColor: "#d926aa",
   countdownBarColor: "#661ae6",
   countdownBarEndColor: "#d926aa",
+  useLocalQuestions: false,
 };
 
 const Bucket: React.FC<BucketConfig> = ({
@@ -56,6 +58,7 @@ const Bucket: React.FC<BucketConfig> = ({
   borderColor = defaultBucketConfig.borderColor,
   countdownBarColor = defaultBucketConfig.countdownBarColor,
   countdownBarEndColor = defaultBucketConfig.countdownBarEndColor,
+  useLocalQuestions = defaultBucketConfig.useLocalQuestions || false,
 }) => {
   const [flaggedQuestion, setFlaggedQuestion] = useState<Question | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -66,7 +69,7 @@ const Bucket: React.FC<BucketConfig> = ({
   const dropsRef = useRef<number[] | undefined>();
   dropsRef.current = dropsCreated;
 
-  const { isLoading, setFilter } = useQuestions();
+  const { isLoading, setFilter, setUseLocalQuestions } = useQuestions();
 
   const dropLoaded = () => {
     if (dropsRef.current && dropsRef.current?.length < dropCount) {
@@ -97,6 +100,10 @@ const Bucket: React.FC<BucketConfig> = ({
       }
     }
   }, [dropCount, dropsRef.current?.length, dropsCreated]);
+
+  useEffect(() => {
+    setUseLocalQuestions(useLocalQuestions);
+  }, [setUseLocalQuestions, useLocalQuestions]);
 
   const maxWidthMap = {
     small: "max-w-xs",
