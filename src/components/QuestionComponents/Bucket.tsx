@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useMeasure from "react-use-measure";
 import Drop from "./Drop";
-import { useQuestions } from "~/context/useQuestions";
+import { QuestionsProvider, useQuestions } from "~/context/useQuestions";
 import Loading from "../Loading";
 import FlagQuestionModal from "./FlagQuestionModal";
 
@@ -175,4 +175,12 @@ const Bucket: React.FC<BucketConfig> = ({
   );
 };
 
-export default Bucket;
+const FinalBucket = () => {
+  return (
+    <QuestionsProvider>
+      <Bucket />
+    </QuestionsProvider>
+  );
+};
+
+export default FinalBucket;
