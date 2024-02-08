@@ -8,7 +8,7 @@ const Layout: React.FC<PropsWithChildren & { className?: string }> = ({
   ...props
 }) => {
   return (
-    <div className="drawer">
+    <div className="drawer bg-base-300">
       <input id="nav-drawer" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content overflow-x-hidden">
         <Nav />
