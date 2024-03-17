@@ -59,7 +59,7 @@ const Drop: React.FC<{
     countdownBarColor || "#d926aa"
   }, ${countdownBarEndColor || "#661ae6"})`;
 
-  const { getNextInQueue, isLoading, queue } = useQuestions();
+  const { getNextInQueue, queue } = useQuestions();
   const { user } = useUser();
   const role = user?.organizationMemberships[0]?.role;
   const isAdmin = role === "admin";
@@ -70,11 +70,11 @@ const Drop: React.FC<{
   };
 
   useEffect(() => {
-    if (!isLoading && !question) {
+    if (!question) {
       getNext();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, queue]);
+  }, [queue]);
 
   const toggleTimer = () => {
     if (started) {

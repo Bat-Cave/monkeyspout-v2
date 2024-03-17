@@ -69,7 +69,7 @@ const Bucket: React.FC<BucketConfig> = ({
   const dropsRef = useRef<number[] | undefined>();
   dropsRef.current = dropsCreated;
 
-  const { isLoading, setFilter, setUseLocalQuestions } = useQuestions();
+  const { setFilter, setUseLocalQuestions } = useQuestions();
 
   const dropLoaded = () => {
     if (dropsRef.current && dropsRef.current?.length < dropCount) {
@@ -78,10 +78,8 @@ const Bucket: React.FC<BucketConfig> = ({
   };
 
   useEffect(() => {
-    if (!isLoading) {
-      onLoad();
-    }
-  }, [isLoading, onLoad]);
+    onLoad();
+  }, [onLoad]);
 
   useEffect(() => {
     setFilter([...excludedCategories]?.join(","));
@@ -131,37 +129,33 @@ const Bucket: React.FC<BucketConfig> = ({
           className="card flex w-full flex-col gap-4 border-2 border-slate-400 p-4"
         >
           <AnimatePresence mode="popLayout">
-            {!isLoading ? (
-              dropsRef.current?.map((d) => {
-                return (
-                  <motion.div
-                    initial={{ opacity: 0, x: -500 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 500 }}
-                    transition={{ type: "spring" }}
-                    key={`drop-${d}`}
-                  >
-                    <Drop
-                      onLoad={() => dropLoaded()}
-                      onFlagClick={onFlag}
-                      size={size}
-                      showCategories={showCategories}
-                      showSkip={showSkip}
-                      showCopy={showCopy}
-                      showPlayPause={showPlayPause}
-                      backgroundColor={backgroundColor}
-                      backgroundColorEnd={backgroundColorEnd}
-                      textColor={textColor}
-                      borderColor={borderColor}
-                      countdownBarColor={countdownBarColor}
-                      countdownBarEndColor={countdownBarEndColor}
-                    />
-                  </motion.div>
-                );
-              })
-            ) : (
-              <Loading />
-            )}
+            {dropsRef.current?.map((d) => {
+              return (
+                <motion.div
+                  initial={{ opacity: 0, x: -500 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 500 }}
+                  transition={{ type: "spring" }}
+                  key={`drop-${d}`}
+                >
+                  <Drop
+                    onLoad={() => dropLoaded()}
+                    onFlagClick={onFlag}
+                    size={size}
+                    showCategories={showCategories}
+                    showSkip={showSkip}
+                    showCopy={showCopy}
+                    showPlayPause={showPlayPause}
+                    backgroundColor={backgroundColor}
+                    backgroundColorEnd={backgroundColorEnd}
+                    textColor={textColor}
+                    borderColor={borderColor}
+                    countdownBarColor={countdownBarColor}
+                    countdownBarEndColor={countdownBarEndColor}
+                  />
+                </motion.div>
+              );
+            })}
           </AnimatePresence>
         </div>
       </motion.div>
