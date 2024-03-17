@@ -6,6 +6,7 @@ import "~/styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { QuestionsProvider } from "~/context/useQuestions";
 import { Toaster } from "react-hot-toast";
+import { Analytics } from "@vercel/analytics/react";
 // import { useEffect } from "react";
 // import { useRouter } from "next/router";
 // import * as ga from "../lib/ga";
@@ -27,6 +28,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     <ClerkProvider>
       <QuestionsProvider>
         <Component {...pageProps} />
+        <Analytics />
         <Toaster
           toastOptions={{
             position: "bottom-right",

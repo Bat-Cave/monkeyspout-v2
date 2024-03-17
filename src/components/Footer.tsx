@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
           />
           <p className="ml-2 block text-lg sm:text-4xl">Monkey Spout</p>
         </Link>
-        <p>Copyright © 2023 - All right reserved</p>
+        <p>Copyright © 2024 - All right reserved</p>
       </div>
     </footer>
   );
