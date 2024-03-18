@@ -1,6 +1,5 @@
 "use client";
 
-import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -26,11 +25,6 @@ const Widget: React.FC = () => {
 
   return (
     <>
-      <Head>
-        <title>Monkey Spout | Widget</title>
-        <meta name="description" content="" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <div className="flex min-h-screen w-full flex-col items-center justify-center">
         <Bucket {...queryParams} />
         <Link

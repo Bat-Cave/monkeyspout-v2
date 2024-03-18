@@ -1,5 +1,3 @@
-import type { Question } from "@prisma/client";
-
 export const categories = [
   { label: "Career", color: "#f77171" },
   { label: "Controversial", color: "#f6996a" },
@@ -45,7 +43,7 @@ export const getCategoryColor = (category: string) => {
   return `NO COLOR FOUND FOR ${category}.`;
 };
 
-export const questions: Question[] = [
+export const questions: any[] = [
   {
     id: "clg35xkog0000zuhk4f3am2f2",
     createdAt: new Date("2023-04-05T04:02:06.448Z"),

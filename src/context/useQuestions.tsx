@@ -1,4 +1,5 @@
-import type { Question } from "@prisma/client";
+"use client";
+
 import React, {
   createContext,
   useContext,
@@ -8,6 +9,8 @@ import React, {
 } from "react";
 import { shuffle } from "~/utils/tools";
 import { questions as localQuestions } from "~/utils/quesitons";
+
+type Question = any;
 
 type QuestionsContextType = {
   queue: Question[];

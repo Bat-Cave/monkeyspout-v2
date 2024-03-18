@@ -1,12 +1,11 @@
-import type { Question } from "@prisma/client";
-import type { SizeType } from "~/pages/widget";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useMeasure from "react-use-measure";
 import Drop from "./Drop";
 import { useQuestions } from "~/context/useQuestions";
-import Loading from "../Loading";
-import FlagQuestionModal from "./FlagQuestionModal";
+import type { SizeType } from "~/app/(pages)/widget/page";
+
+type Question = any;
 
 export type BucketConfig = {
   onLoad?: () => void;
@@ -159,12 +158,6 @@ const Bucket: React.FC<BucketConfig> = ({
           </AnimatePresence>
         </div>
       </motion.div>
-      <FlagQuestionModal
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        handleClose={() => setIsOpen(false)}
-        question={flaggedQuestion}
-      />
     </>
   );
 };

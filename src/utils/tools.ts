@@ -1,4 +1,4 @@
-import type { Question } from "@prisma/client";
+type Question = any;
 
 export const shuffle = (array: Question[]) => {
   return array
