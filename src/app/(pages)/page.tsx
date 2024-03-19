@@ -1,36 +1,11 @@
 import { type NextPage } from "next";
 import Bucket from "~/components/QuestionComponents/Bucket";
-import QuestionSplash from "~/components/QuestionSplash";
 import Link from "next/link";
 import { QuestionsProvider } from "~/context/useQuestions";
 import QuestionCount from "~/components/question-count";
 import Hero from "~/components/hero";
 
 const Home: NextPage = () => {
-  // const fontSize = useMemo(() => {
-  //   if (width >= 1024) {
-  //     return "250px";
-  //   }
-  //   if (width < 1024 && width > 449) {
-  //     return "150px";
-  //   }
-  //   if (width < 450) {
-  //     return "100px";
-  //   }
-  // }, [width]);
-
-  // const lineHeight = useMemo(() => {
-  //   if (width >= 1024) {
-  //     return "270px";
-  //   }
-  //   if (width < 1024 && width > 449) {
-  //     return "170px";
-  //   }
-  //   if (width < 450) {
-  //     return "110px";
-  //   }
-  // }, [width]);
-
   return (
     <>
       <span className="to-primary-focus absolute right-12 top-28 z-0 h-[500px] w-[600px] rotate-12 rounded-full bg-gradient-to-tr from-primary opacity-30 blur-3xl"></span>
