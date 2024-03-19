@@ -120,7 +120,7 @@ const Widget: React.FC = () => {
               value={url}
               disabled
             />
-            <button className="btn-square btn mr-1 px-1 opacity-60 transition-all hover:btn-secondary hover:opacity-100">
+            <button className="btn btn-square mr-1 px-1 opacity-60 transition-all hover:btn-secondary hover:opacity-100">
               {copied ? <CheckCircle /> : <Copy />}
             </button>
           </div>
@@ -139,6 +139,7 @@ const Widget: React.FC = () => {
               <span className="label-text">Drop count: {dropCount}</span>
             </label>
             <input
+              aria-label="Number of Drops (Questions)"
               type="range"
               min="1"
               max="15"
