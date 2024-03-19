@@ -1,9 +1,12 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useMeasure from "react-use-measure";
 import Drop from "./Drop";
 import { useQuestions } from "~/context/useQuestions";
 import type { SizeType } from "~/app/(pages)/widget/page";
+import Loading from "../Loading";
 
 type Question = any;
 
@@ -22,7 +25,6 @@ export type BucketConfig = {
   borderColor?: string;
   countdownBarColor?: string;
   countdownBarEndColor?: string;
-  useLocalQuestions?: boolean;
 };
 
 export const defaultBucketConfig: BucketConfig = {
@@ -39,7 +41,6 @@ export const defaultBucketConfig: BucketConfig = {
   borderColor: "#d926aa",
   countdownBarColor: "#661ae6",
   countdownBarEndColor: "#d926aa",
-  useLocalQuestions: false,
 };
 
 const Bucket: React.FC<BucketConfig> = ({
@@ -57,7 +58,6 @@ const Bucket: React.FC<BucketConfig> = ({
   borderColor = defaultBucketConfig.borderColor,
   countdownBarColor = defaultBucketConfig.countdownBarColor,
   countdownBarEndColor = defaultBucketConfig.countdownBarEndColor,
-  useLocalQuestions = defaultBucketConfig.useLocalQuestions || false,
 }) => {
   const [flaggedQuestion, setFlaggedQuestion] = useState<Question | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -68,7 +68,7 @@ const Bucket: React.FC<BucketConfig> = ({
   const dropsRef = useRef<number[] | undefined>();
   dropsRef.current = dropsCreated;
 
-  const { setFilter, setUseLocalQuestions } = useQuestions();
+  const { setFilter, loading } = useQuestions();
 
   const dropLoaded = () => {
     if (dropsRef.current && dropsRef.current?.length < dropCount) {
@@ -77,8 +77,10 @@ const Bucket: React.FC<BucketConfig> = ({
   };
 
   useEffect(() => {
-    onLoad();
-  }, [onLoad]);
+    if (!loading) {
+      onLoad();
+    }
+  }, [loading, onLoad]);
 
   useEffect(() => {
     setFilter([...excludedCategories]?.join(","));
@@ -97,10 +99,6 @@ const Bucket: React.FC<BucketConfig> = ({
       }
     }
   }, [dropCount, dropsRef.current?.length, dropsCreated]);
-
-  useEffect(() => {
-    setUseLocalQuestions(useLocalQuestions);
-  }, [setUseLocalQuestions, useLocalQuestions]);
 
   const maxWidthMap = {
     small: "max-w-xs",
@@ -128,33 +126,37 @@ const Bucket: React.FC<BucketConfig> = ({
           className="card flex w-full flex-col gap-4 border-2 border-slate-400 p-4"
         >
           <AnimatePresence mode="popLayout">
-            {dropsRef.current?.map((d) => {
-              return (
-                <motion.div
-                  initial={{ opacity: 0, x: -500 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 500 }}
-                  transition={{ type: "spring" }}
-                  key={`drop-${d}`}
-                >
-                  <Drop
-                    onLoad={() => dropLoaded()}
-                    onFlagClick={onFlag}
-                    size={size}
-                    showCategories={showCategories}
-                    showSkip={showSkip}
-                    showCopy={showCopy}
-                    showPlayPause={showPlayPause}
-                    backgroundColor={backgroundColor}
-                    backgroundColorEnd={backgroundColorEnd}
-                    textColor={textColor}
-                    borderColor={borderColor}
-                    countdownBarColor={countdownBarColor}
-                    countdownBarEndColor={countdownBarEndColor}
-                  />
-                </motion.div>
-              );
-            })}
+            {!loading ? (
+              dropsRef.current?.map((d) => {
+                return (
+                  <motion.div
+                    initial={{ opacity: 0, x: -500 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 500 }}
+                    transition={{ type: "spring" }}
+                    key={`drop-${d}`}
+                  >
+                    <Drop
+                      onLoad={() => dropLoaded()}
+                      onFlagClick={onFlag}
+                      size={size}
+                      showCategories={showCategories}
+                      showSkip={showSkip}
+                      showCopy={showCopy}
+                      showPlayPause={showPlayPause}
+                      backgroundColor={backgroundColor}
+                      backgroundColorEnd={backgroundColorEnd}
+                      textColor={textColor}
+                      borderColor={borderColor}
+                      countdownBarColor={countdownBarColor}
+                      countdownBarEndColor={countdownBarEndColor}
+                    />
+                  </motion.div>
+                );
+              })
+            ) : (
+              <Loading />
+            )}
           </AnimatePresence>
         </div>
       </motion.div>

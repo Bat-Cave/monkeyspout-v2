@@ -36,7 +36,6 @@ const mapAttributesToSupabaseFields = (eventData: EventData) => {
     last_active_at,
     last_sign_in_at,
     admin: public_metadata.admin === "true",
-    developer: public_metadata.developer === "true",
   };
 };
 

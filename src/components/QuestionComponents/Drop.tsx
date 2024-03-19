@@ -59,7 +59,7 @@ const Drop: React.FC<{
     countdownBarColor || "#d926aa"
   }, ${countdownBarEndColor || "#661ae6"})`;
 
-  const { getNextInQueue, queue } = useQuestions();
+  const { getNextInQueue, queue, loading } = useQuestions();
   const { user } = useUser();
   const role = user?.organizationMemberships[0]?.role;
   const isAdmin = role === "admin";
@@ -70,11 +70,11 @@ const Drop: React.FC<{
   };
 
   useEffect(() => {
-    if (!question) {
+    if (!loading && !question) {
       getNext();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queue]);
+  }, [loading, queue]);
 
   const toggleTimer = () => {
     if (started) {
@@ -106,7 +106,7 @@ const Drop: React.FC<{
         ".absolute",
         { width: 0 },
         {
-          duration: Number(questionRef.current?.timeout || 0) / 1000,
+          duration: Number(questionRef.current?.duration || 0) / 1000,
           ease: "linear",
           onUpdate: (latest) => {
             if (latest <= 0.01) {
@@ -142,7 +142,7 @@ const Drop: React.FC<{
       >
         <div
           ref={ref}
-          key={questionRef.current?.id}
+          key={questionRef.current?.id + '-inner'}
           id={questionRef.current?.id}
           className="relative w-full overflow-hidden rounded-2xl border-2 border-secondary p-4 pb-2 transition-all duration-200"
           style={{
