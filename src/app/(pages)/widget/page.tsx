@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import queryString from "query-string";
 import Bucket from "~/components/QuestionComponents/Bucket";
-import logo from "../../assets/logo.png";
+import logo from "../../../assets/logo.png";
 import { useLayoutEffect } from "react";
 
 export type SizeType = "small" | "normal" | "large" | "extra large";
