@@ -26,9 +26,9 @@ const mapAttributesToSupabaseFields = (eventData: EventData) => {
     id,
     first_name,
     last_name,
-    email: email_addresses.filter(
+    email: email_addresses?.filter(
       (email) => email.id === primary_email_address_id
-    )[0].email_address,
+    )?.[0]?.email_address,
     image_url: image_url || profile_image_url || "",
     username,
     created_at,

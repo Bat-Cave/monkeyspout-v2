@@ -1,5 +1,5 @@
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
-import { Cancel } from "iconoir-react";
+import { Xmark } from "iconoir-react";
 import Image from "next/image";
 import Link from "next/link";
 import logo from "~/assets/logo.png";
@@ -54,7 +54,7 @@ const Nav: React.FC = () => {
               )}
             </div>
             <div className="flex-none lg:hidden">
-              <label htmlFor="nav-drawer" className="btn-ghost btn-square btn">
+              <label htmlFor="nav-drawer" className="btn-ghost btn btn-square">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -87,7 +87,7 @@ export const NavLinks = () => {
         htmlFor="nav-drawer"
         className="btn absolute right-3 top-3 cursor-pointer px-1"
       >
-        <Cancel className=" h-10 w-10" />
+        <Xmark className=" h-10 w-10" />
       </label>
       <Link href="/" className="flex items-center font-bold">
         <Image
