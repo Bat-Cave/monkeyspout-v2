@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import { HexColorInput, HexColorPicker } from "react-colorful";
 import { useDebouncedCallback } from "use-debounce";
 import SmoothMount from "./SmoothMount";
-import useOnClickOutside from "~/hooks/useOnClickOutside";
+import useOnClickOutside from "@/hooks/useOnClickOutside";
 
 const ColorPicker: React.FC<{
   defaultColor?: string;
@@ -28,6 +28,7 @@ const ColorPicker: React.FC<{
           e.stopPropagation();
           setPickerOpen(!pickerOpen);
         }}
+        aria-label="Pick Color"
         className={`h-6 w-6 rounded-md outline outline-1 outline-offset-2 outline-white`}
         style={{ background: color }}
       ></button>

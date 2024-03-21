@@ -1,12 +1,13 @@
-import type { Question } from "@prisma/client";
-import type { SizeType } from "~/pages/widget";
+"use client";
+
+import type { SizeType } from "@/app/(pages)/widget/page";
+import { useQuestions } from "@/context/useQuestions";
+import type { Tables } from "@/types/supabase";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import useMeasure from "react-use-measure";
-import Drop from "./Drop";
-import { useQuestions } from "~/context/useQuestions";
 import Loading from "../Loading";
-import FlagQuestionModal from "./FlagQuestionModal";
+import Drop from "./Drop";
 
 export type BucketConfig = {
   onLoad?: () => void;
@@ -23,7 +24,6 @@ export type BucketConfig = {
   borderColor?: string;
   countdownBarColor?: string;
   countdownBarEndColor?: string;
-  useLocalQuestions?: boolean;
 };
 
 export const defaultBucketConfig: BucketConfig = {
@@ -40,7 +40,6 @@ export const defaultBucketConfig: BucketConfig = {
   borderColor: "#d926aa",
   countdownBarColor: "#661ae6",
   countdownBarEndColor: "#d926aa",
-  useLocalQuestions: false,
 };
 
 const Bucket: React.FC<BucketConfig> = ({
@@ -58,9 +57,9 @@ const Bucket: React.FC<BucketConfig> = ({
   borderColor = defaultBucketConfig.borderColor,
   countdownBarColor = defaultBucketConfig.countdownBarColor,
   countdownBarEndColor = defaultBucketConfig.countdownBarEndColor,
-  useLocalQuestions = defaultBucketConfig.useLocalQuestions || false,
 }) => {
-  const [flaggedQuestion, setFlaggedQuestion] = useState<Question | null>(null);
+  const [flaggedQuestion, setFlaggedQuestion] =
+    useState<Tables<"Questions"> | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [ref, bounds] = useMeasure();
   const [dropsCreated, setDropsCreated] = useState<number[] | undefined>([
@@ -69,7 +68,7 @@ const Bucket: React.FC<BucketConfig> = ({
   const dropsRef = useRef<number[] | undefined>();
   dropsRef.current = dropsCreated;
 
-  const { setFilter, setUseLocalQuestions } = useQuestions();
+  const { setFilter, loading } = useQuestions();
 
   const dropLoaded = () => {
     if (dropsRef.current && dropsRef.current?.length < dropCount) {
@@ -78,8 +77,10 @@ const Bucket: React.FC<BucketConfig> = ({
   };
 
   useEffect(() => {
-    onLoad();
-  }, [onLoad]);
+    if (!loading) {
+      onLoad();
+    }
+  }, [loading, onLoad]);
 
   useEffect(() => {
     setFilter([...excludedCategories]?.join(","));
@@ -99,10 +100,6 @@ const Bucket: React.FC<BucketConfig> = ({
     }
   }, [dropCount, dropsRef.current?.length, dropsCreated]);
 
-  useEffect(() => {
-    setUseLocalQuestions(useLocalQuestions);
-  }, [setUseLocalQuestions, useLocalQuestions]);
-
   const maxWidthMap = {
     small: "max-w-xs",
     normal: "max-w-md",
@@ -110,7 +107,7 @@ const Bucket: React.FC<BucketConfig> = ({
     "extra large": "max-w-4xl",
   };
 
-  const onFlag = (q: Question | null) => {
+  const onFlag = (q: Tables<"Questions"> | null) => {
     if (q) {
       setFlaggedQuestion(q);
       setIsOpen(true);
@@ -129,42 +126,40 @@ const Bucket: React.FC<BucketConfig> = ({
           className="card flex w-full flex-col gap-4 border-2 border-slate-400 p-4"
         >
           <AnimatePresence mode="popLayout">
-            {dropsRef.current?.map((d) => {
-              return (
-                <motion.div
-                  initial={{ opacity: 0, x: -500 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 500 }}
-                  transition={{ type: "spring" }}
-                  key={`drop-${d}`}
-                >
-                  <Drop
-                    onLoad={() => dropLoaded()}
-                    onFlagClick={onFlag}
-                    size={size}
-                    showCategories={showCategories}
-                    showSkip={showSkip}
-                    showCopy={showCopy}
-                    showPlayPause={showPlayPause}
-                    backgroundColor={backgroundColor}
-                    backgroundColorEnd={backgroundColorEnd}
-                    textColor={textColor}
-                    borderColor={borderColor}
-                    countdownBarColor={countdownBarColor}
-                    countdownBarEndColor={countdownBarEndColor}
-                  />
-                </motion.div>
-              );
-            })}
+            {!loading ? (
+              dropsRef.current?.map((d) => {
+                return (
+                  <motion.div
+                    initial={{ opacity: 0, x: -500 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 500 }}
+                    transition={{ type: "spring" }}
+                    key={`drop-${d}`}
+                  >
+                    <Drop
+                      onLoad={() => dropLoaded()}
+                      onFlagClick={onFlag}
+                      size={size}
+                      showCategories={showCategories}
+                      showSkip={showSkip}
+                      showCopy={showCopy}
+                      showPlayPause={showPlayPause}
+                      backgroundColor={backgroundColor}
+                      backgroundColorEnd={backgroundColorEnd}
+                      textColor={textColor}
+                      borderColor={borderColor}
+                      countdownBarColor={countdownBarColor}
+                      countdownBarEndColor={countdownBarEndColor}
+                    />
+                  </motion.div>
+                );
+              })
+            ) : (
+              <Loading />
+            )}
           </AnimatePresence>
         </div>
       </motion.div>
-      <FlagQuestionModal
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        handleClose={() => setIsOpen(false)}
-        question={flaggedQuestion}
-      />
     </>
   );
 };

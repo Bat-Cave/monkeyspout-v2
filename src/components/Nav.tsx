@@ -1,8 +1,8 @@
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
-import { Cancel } from "iconoir-react";
+import { Xmark } from "iconoir-react";
 import Image from "next/image";
 import Link from "next/link";
-import logo from "~/assets/logo.png";
+import logo from "@/assets/logo.png";
 
 const Nav: React.FC = () => {
   const { isSignedIn, user } = useUser();
@@ -87,7 +87,7 @@ export const NavLinks = () => {
         htmlFor="nav-drawer"
         className="btn absolute right-3 top-3 cursor-pointer px-1"
       >
-        <Cancel className=" h-10 w-10" />
+        <Xmark className=" h-10 w-10" />
       </label>
       <Link href="/" className="flex items-center font-bold">
         <Image

@@ -1,4 +1,4 @@
-import { Cancel } from "iconoir-react";
+import { Xmark } from "iconoir-react";
 import type { PropsWithChildren } from "react";
 
 const Modal: React.FC<
@@ -35,7 +35,7 @@ const Modal: React.FC<
           <div className="m-0 mb-6 flex items-end justify-between">
             <p className="text-4xl">{title}</p>
             <button className="btn" onClick={() => setIsOpen(!isOpen)}>
-              <Cancel />
+              <Xmark />
             </button>
           </div>
           {children}

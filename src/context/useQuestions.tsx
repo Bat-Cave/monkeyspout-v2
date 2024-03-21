@@ -1,4 +1,5 @@
-import type { Question } from "@prisma/client";
+"use client";
+
 import React, {
   createContext,
   useContext,
@@ -6,15 +7,19 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { shuffle } from "~/utils/tools";
-import { questions as localQuestions } from "~/utils/quesitons";
+import { shuffle } from "@/lib/tools";
+import { questions as localQuestions } from "@/data/quesitons";
+import supabase from "@/lib/supabase";
+import type { Tables } from "@/types/supabase";
+
+type Question = Tables<"Questions">;
 
 type QuestionsContextType = {
   queue: Question[];
   questions: Question[];
   getNextInQueue: (arg0: () => void) => Question | undefined;
   setFilter: (arg0: string) => void;
-  setUseLocalQuestions: (arg0: boolean) => void;
+  loading: boolean;
 };
 
 const QuestionsContext = createContext<QuestionsContextType | undefined>(
@@ -23,8 +28,7 @@ const QuestionsContext = createContext<QuestionsContextType | undefined>(
 
 function QuestionsProvider({ children }: { children: React.ReactNode }) {
   const [filter, setFilter] = useState("");
-  const [useLocalQuestions, setUseLocalQuestions] = useState(true);
-  // const { data, isLoading } = api.questions.getByFilter.useQuery(filter);
+  const [loading, setLoading] = useState(true);
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [queue, setQueue] = useState<Question[]>([]);
@@ -32,18 +36,26 @@ function QuestionsProvider({ children }: { children: React.ReactNode }) {
   queueRef.current = queue;
 
   useEffect(() => {
-    // if (data?.length && !useLocalQuestions) {
-    //   setQuestions(data);
-    //   const shuffledData = shuffle(data);
-    //   setQueue(shuffledData);
-    // }
+    const fetchQuestions = async () => {
+      const { data, error } = await supabase.from("Questions").select();
 
-    if (true || useLocalQuestions) {
-      setQuestions(localQuestions);
-      const shuffledData = shuffle(localQuestions);
-      setQueue(shuffledData);
+      if (!error && data) {
+        setQuestions(data);
+      } else {
+        setQuestions(localQuestions);
+      }
+      setLoading(false);
+    };
+
+    void fetchQuestions();
+  }, []);
+
+  useEffect(() => {
+    if (questions.length) {
+      const shuffled = shuffle(questions);
+      setQueue(shuffled);
     }
-  }, [useLocalQuestions]);
+  }, [questions]);
 
   const getNextInQueue = (callback: () => void) => {
     let res;
@@ -67,7 +79,7 @@ function QuestionsProvider({ children }: { children: React.ReactNode }) {
     questions,
     getNextInQueue,
     setFilter,
-    setUseLocalQuestions,
+    loading,
   };
 
   return (
