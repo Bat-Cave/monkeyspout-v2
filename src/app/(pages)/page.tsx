@@ -1,21 +1,21 @@
 import { type NextPage } from "next";
-import Bucket from "~/components/QuestionComponents/Bucket";
+import Bucket from "@/components/QuestionComponents/Bucket";
 import Link from "next/link";
-import { QuestionsProvider } from "~/context/useQuestions";
-import QuestionCount from "~/components/question-count";
-import Hero from "~/components/hero";
+import { QuestionsProvider } from "@/context/useQuestions";
+import QuestionCount from "@/components/question-count";
+import Hero from "@/components/hero";
 
 const Home: NextPage = () => {
   return (
     <>
-      <span className="to-primary-focus absolute right-12 top-28 z-0 h-[500px] w-[600px] rotate-12 rounded-full bg-gradient-to-tr from-primary opacity-30 blur-3xl"></span>
-      <span className="to-secondary-focus absolute left-12 top-96 z-0 h-[300px] w-[400px] rotate-12 rounded-full bg-gradient-to-tr from-secondary opacity-30 blur-3xl"></span>
+      <span className="absolute right-12 top-28 z-0 h-[500px] w-[600px] rotate-12 rounded-full bg-gradient-to-tr from-primary to-primary-focus opacity-30 blur-3xl"></span>
+      <span className="absolute left-12 top-96 z-0 h-[300px] w-[400px] rotate-12 rounded-full bg-gradient-to-tr from-secondary to-secondary-focus opacity-30 blur-3xl"></span>
       <Hero />
 
       <QuestionCount />
 
       <section className="relative flex min-h-[calc(100vh-80px)] w-full flex-col items-center justify-center">
-        <span className="to-secondary-focus absolute left-24 top-28 z-0 h-[300px] w-[400px] rotate-12 rounded-full bg-gradient-to-tr from-secondary opacity-30 blur-3xl"></span>
+        <span className="absolute left-24 top-28 z-0 h-[300px] w-[400px] rotate-12 rounded-full bg-gradient-to-tr from-secondary to-secondary-focus opacity-30 blur-3xl"></span>
         <div className="z-10 flex w-full flex-col items-center justify-center">
           <h3 className="text-5xl font-bold">Customize to your liking</h3>
           <div className="mt-12 flex w-full max-w-md flex-col items-center gap-4 lg:max-w-3xl lg:flex-row">

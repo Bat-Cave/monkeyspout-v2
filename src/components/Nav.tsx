@@ -2,7 +2,7 @@ import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import { Xmark } from "iconoir-react";
 import Image from "next/image";
 import Link from "next/link";
-import logo from "~/assets/logo.png";
+import logo from "@/assets/logo.png";
 
 const Nav: React.FC = () => {
   const { isSignedIn, user } = useUser();
@@ -54,7 +54,7 @@ const Nav: React.FC = () => {
               )}
             </div>
             <div className="flex-none lg:hidden">
-              <label htmlFor="nav-drawer" className="btn-ghost btn btn-square">
+              <label htmlFor="nav-drawer" className="btn-ghost btn-square btn">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

@@ -1,14 +1,13 @@
 "use client";
 
+import type { SizeType } from "@/app/(pages)/widget/page";
+import { useQuestions } from "@/context/useQuestions";
+import type { Tables } from "@/types/supabase";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import useMeasure from "react-use-measure";
-import Drop from "./Drop";
-import { useQuestions } from "~/context/useQuestions";
-import type { SizeType } from "~/app/(pages)/widget/page";
 import Loading from "../Loading";
-
-type Question = any;
+import Drop from "./Drop";
 
 export type BucketConfig = {
   onLoad?: () => void;
@@ -59,7 +58,8 @@ const Bucket: React.FC<BucketConfig> = ({
   countdownBarColor = defaultBucketConfig.countdownBarColor,
   countdownBarEndColor = defaultBucketConfig.countdownBarEndColor,
 }) => {
-  const [flaggedQuestion, setFlaggedQuestion] = useState<Question | null>(null);
+  const [flaggedQuestion, setFlaggedQuestion] =
+    useState<Tables<"Questions"> | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [ref, bounds] = useMeasure();
   const [dropsCreated, setDropsCreated] = useState<number[] | undefined>([
@@ -107,7 +107,7 @@ const Bucket: React.FC<BucketConfig> = ({
     "extra large": "max-w-4xl",
   };
 
-  const onFlag = (q: Question | null) => {
+  const onFlag = (q: Tables<"Questions"> | null) => {
     if (q) {
       setFlaggedQuestion(q);
       setIsOpen(true);

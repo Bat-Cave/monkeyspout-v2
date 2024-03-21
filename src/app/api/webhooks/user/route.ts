@@ -2,7 +2,7 @@ import type { IncomingHttpHeaders } from "http";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { Webhook, type WebhookRequiredHeaders } from "svix";
-import supabase from "~/lib/supabase";
+import supabase from "@/lib/supabase";
 
 const webhookSecret = process.env.WEBHOOK_SECRET || "";
 

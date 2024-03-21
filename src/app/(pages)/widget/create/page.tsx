@@ -1,13 +1,13 @@
 "use client";
 
-import type { BucketConfig } from "~/components/QuestionComponents/Bucket";
+import type { BucketConfig } from "@/components/QuestionComponents/Bucket";
 import { useEffect, useState } from "react";
-import Bucket from "~/components/QuestionComponents/Bucket";
-import { defaultBucketConfig } from "~/components/QuestionComponents/Bucket";
+import Bucket from "@/components/QuestionComponents/Bucket";
+import { defaultBucketConfig } from "@/components/QuestionComponents/Bucket";
 import queryString from "query-string";
-import { categories } from "~/utils/quesitons";
+import { categories } from "@/data/quesitons";
 import { CheckCircle, Copy, FastArrowRight, Restart } from "iconoir-react";
-import ColorPicker from "~/components/UI/ColorPicker";
+import ColorPicker from "@/components/UI/ColorPicker";
 import CopyToClipboard from "react-copy-to-clipboard";
 import type { SizeType } from "../page";
 
@@ -120,7 +120,7 @@ const Widget: React.FC = () => {
               value={url}
               disabled
             />
-            <button className="btn btn-square mr-1 px-1 opacity-60 transition-all hover:btn-secondary hover:opacity-100">
+            <button className="btn-square btn mr-1 px-1 opacity-60 transition-all hover:btn-secondary hover:opacity-100">
               {copied ? <CheckCircle /> : <Copy />}
             </button>
           </div>

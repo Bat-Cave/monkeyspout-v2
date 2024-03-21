@@ -7,11 +7,12 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { shuffle } from "~/utils/tools";
-import { questions as localQuestions } from "~/utils/quesitons";
-import supabase from "~/lib/supabase";
+import { shuffle } from "@/lib/tools";
+import { questions as localQuestions } from "@/data/quesitons";
+import supabase from "@/lib/supabase";
+import type { Tables } from "@/types/supabase";
 
-type Question = any;
+type Question = Tables<"Questions">;
 
 type QuestionsContextType = {
   queue: Question[];
@@ -36,10 +37,10 @@ function QuestionsProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const fetchQuestions = async () => {
-      const { data: q, error } = await supabase.from("Questions").select("*");
+      const { data, error } = await supabase.from("Questions").select();
 
-      if (!error) {
-        setQuestions(q);
+      if (!error && data) {
+        setQuestions(data);
       } else {
         setQuestions(localQuestions);
       }

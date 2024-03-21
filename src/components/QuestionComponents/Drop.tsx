@@ -1,9 +1,10 @@
-import type { Question } from "@prisma/client";
+import type { SizeType } from "@/app/(pages)/widget/page";
+import { useQuestions } from "@/context/useQuestions";
+import { getCategoryColor } from "@/data/quesitons";
+import type { Tables } from "@/types/supabase";
+import { useUser } from "@clerk/nextjs";
 import type { AnimationPlaybackControls } from "framer-motion";
-import type { SizeType } from "~/pages/widget";
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
-import { useAnimate } from "framer-motion";
+import { AnimatePresence, motion, useAnimate } from "framer-motion";
 import {
   CheckCircle,
   Copy,
@@ -12,16 +13,14 @@ import {
   SkipNext,
   TriangleFlag,
 } from "iconoir-react";
+import React, { useEffect, useRef, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { useQuestions } from "~/context/useQuestions";
-import { getCategoryColor } from "~/utils/quesitons";
-import { useUser } from "@clerk/nextjs";
-import { defaultBucketConfig } from "./Bucket";
 import SmoothMount from "../UI/SmoothMount";
+import { defaultBucketConfig } from "./Bucket";
 
 const Drop: React.FC<{
   onLoad: () => void;
-  onFlagClick: (arg0: Question | null) => void;
+  onFlagClick: (arg0: Tables<"Questions"> | null) => void;
   size?: SizeType;
   showCategories?: boolean;
   showSkip?: boolean;
@@ -52,8 +51,10 @@ const Drop: React.FC<{
   const [animation, setAnimation] = useState<AnimationPlaybackControls>();
   const [started, setStarted] = useState(true);
   const [copied, setCopied] = useState(false);
-  const [question, setQuestion] = useState<Question | undefined>(undefined);
-  const questionRef = useRef<Question | undefined>(undefined);
+  const [question, setQuestion] = useState<Tables<"Questions"> | undefined>(
+    undefined
+  );
+  const questionRef = useRef<Tables<"Questions"> | undefined>(undefined);
   questionRef.current = question;
   const barBackground = `linear-gradient(45deg, ${
     countdownBarColor || "#d926aa"
@@ -134,16 +135,16 @@ const Drop: React.FC<{
   return (
     <AnimatePresence mode="popLayout">
       <motion.div
-        initial={{ opacity: 0, x: -500 }}
+        initial={{ opacity: 0, x: 500 }}
         animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: 500 }}
+        exit={{ opacity: 0, x: -500 }}
         transition={{ duration: 0.75, type: "spring" }}
         key={questionRef.current?.id}
       >
         <div
           ref={ref}
-          key={questionRef.current?.id + '-inner'}
-          id={questionRef.current?.id}
+          key={(`${questionRef?.current?.id || ""}`) + "-inner"}
+          id={`${questionRef?.current?.id || ""}`}
           className="relative w-full overflow-hidden rounded-2xl border-2 border-secondary p-4 pb-2 transition-all duration-200"
           style={{
             borderColor: borderColor,
@@ -175,7 +176,7 @@ const Drop: React.FC<{
           >
             <SmoothMount show={showCategories && showCategories} width>
               <div className="flex w-full items-center gap-2">
-                {questionRef.current?.category
+                {questionRef?.current?.category?.length && questionRef?.current?.category
                   .split(",")
                   .sort()
                   .map((cat) => {
@@ -201,6 +202,7 @@ const Drop: React.FC<{
                   className="btn-sm btn mr-1 px-1 opacity-60 transition-all hover:btn-error hover:opacity-100"
                   onClick={() => handleFlagClick()}
                 >
+                  <span className="sr-only">Flag Question</span>
                   <TriangleFlag />
                 </button>
               </SmoothMount>
@@ -209,6 +211,7 @@ const Drop: React.FC<{
                   className="btn-sm btn mr-1 px-1 opacity-60 transition-all hover:btn-info hover:opacity-100"
                   onClick={() => getNext()}
                 >
+                  <span className="sr-only">Skip Question</span>
                   <SkipNext />
                 </button>
               </SmoothMount>

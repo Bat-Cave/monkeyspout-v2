@@ -1,8 +1,8 @@
-import Layout from "~/components/Layout";
-import { Analytics } from "~/components/analytics";
-import { ThemeProvider } from "~/components/theme-provider";
+import Layout from "@/components/Layout";
+import { Analytics } from "@/components/analytics";
+import { ThemeProvider } from "@/components/theme-provider";
 import { Inter } from "next/font/google";
-import "~/styles/globals.css";
+import "@/styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 
 const inter = Inter({ subsets: ["latin"] });

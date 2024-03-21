@@ -3,7 +3,7 @@
 import type { PropsWithChildren } from "react";
 import Nav, { NavLinks } from "./Nav";
 import Footer from "./Footer";
-import { QuestionsProvider } from "~/context/useQuestions";
+import { QuestionsProvider } from "@/context/useQuestions";
 
 const Layout: React.FC<PropsWithChildren & { className?: string }> = ({
   children,
@@ -13,7 +13,12 @@ const Layout: React.FC<PropsWithChildren & { className?: string }> = ({
   return (
     <QuestionsProvider>
       <div className="drawer bg-base-300">
-        <input id="nav-drawer" type="checkbox" className="drawer-toggle" />
+        <input
+          aria-label="Open Drawer"
+          id="nav-drawer"
+          type="checkbox"
+          className="drawer-toggle"
+        />
         <div className="drawer-content overflow-x-hidden">
           <Nav />
           <main

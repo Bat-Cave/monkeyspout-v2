@@ -1,6 +1,6 @@
-import monkeySee from "~/assets/monkey-see.png";
-import monkeyHear from "~/assets/monkey-hear.png";
-import monkeySpeak from "~/assets/monkey-speak.png";
+import monkeySee from "@/assets/monkey-see.png";
+import monkeyHear from "@/assets/monkey-hear.png";
+import monkeySpeak from "@/assets/monkey-speak.png";
 import Image from "next/image";
 import type { StaticImageData } from "next/image";
 import { forwardRef, useEffect, useState } from "react";
