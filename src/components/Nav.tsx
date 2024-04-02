@@ -1,4 +1,9 @@
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import {
+  SignInButton,
+  SignOutButton,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
 import { Xmark } from "iconoir-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -47,14 +52,12 @@ const Nav: React.FC = () => {
                   <Link href="/widget/create" className="btn-primary btn">
                     Create Widget
                   </Link>
-                  <SignOutButton>
-                    <div className="btn">Sign Out</div>
-                  </SignOutButton>
+                  <UserButton />
                 </>
               )}
             </div>
             <div className="flex-none lg:hidden">
-              <label htmlFor="nav-drawer" className="btn-ghost btn-square btn">
+              <label htmlFor="nav-drawer" className="btn-ghost btn btn-square">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

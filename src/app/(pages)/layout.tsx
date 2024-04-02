@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "@/components/UI/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -60,6 +61,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Layout>{children}</Layout>
             <Analytics />
+            <Toaster position="bottom-right" />
           </ThemeProvider>
         </ClerkProvider>
       </body>

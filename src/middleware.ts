@@ -4,7 +4,7 @@ export default authMiddleware({
   publicRoutes: ["((?!^/admin).*)"],
   afterAuth(auth, req, evt) {
     // console.log({ auth, req, evt });
-    console.log(auth);
+    // console.log(auth);
   },
 });
 

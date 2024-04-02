@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/UI/dropdown-menu";
 import { MoreHoriz } from "iconoir-react";
+import { toast } from "sonner";
 
 export const columns: ColumnDef<Tables<"Questions">>[] = [
   {
@@ -23,7 +24,10 @@ export const columns: ColumnDef<Tables<"Questions">>[] = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button type="button" className="btn btn-sm h-8 w-8 p-0">
+            <button
+              type="button"
+              className="btn-secondary btn btn-sm h-8 w-8 p-0"
+            >
               <span className="sr-only">Open menu</span>
               <MoreHoriz className="h-4 w-4" />
             </button>
@@ -31,9 +35,10 @@ export const columns: ColumnDef<Tables<"Questions">>[] = [
           <DropdownMenuContent align="start">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() =>
-                void navigator.clipboard.writeText(question.question || "")
-              }
+              onClick={() => {
+                void navigator.clipboard.writeText(question.question || "");
+                toast.success("Question copied to clipboard 👍");
+              }}
             >
               Copy Question
             </DropdownMenuItem>
@@ -54,6 +59,13 @@ export const columns: ColumnDef<Tables<"Questions">>[] = [
   {
     accessorKey: "question",
     header: "Question",
+    cell: ({ cell }) => {
+      const value = cell.getValue();
+      return (
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        <div className="max-w-sm truncate" title={`${value}`}>{`${value}`}</div>
+      );
+    },
   },
   {
     accessorKey: "duration",
