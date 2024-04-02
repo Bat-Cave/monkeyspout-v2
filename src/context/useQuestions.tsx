@@ -30,6 +30,8 @@ function QuestionsProvider({ children }: { children: React.ReactNode }) {
   const [filter, setFilter] = useState("");
   const [loading, setLoading] = useState(true);
 
+  console.log({ filter });
+
   const [questions, setQuestions] = useState<Question[]>([]);
   const [queue, setQueue] = useState<Question[]>([]);
   const queueRef = useRef<Question[]>();

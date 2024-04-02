@@ -144,8 +144,8 @@ const Drop: React.FC<{
       >
         <div
           ref={ref}
-          key={questionRef.current?.id + "-inner"}
-          id={questionRef.current?.id}
+          key={`${questionRef?.current?.id || 0}` + "-inner"}
+          id={`${questionRef?.current?.id || 0}`}
           className="relative w-full overflow-hidden rounded-2xl border-2 border-secondary p-4 pb-2 transition-all duration-200"
           style={{
             borderColor: borderColor,
@@ -177,7 +177,7 @@ const Drop: React.FC<{
           >
             <SmoothMount show={showCategories && showCategories} width>
               <div className="flex w-full items-center gap-2">
-                {questionRef.current?.category
+                {`${questionRef?.current?.category || ""}`
                   .split(",")
                   .sort()
                   .map((cat) => {
@@ -203,6 +203,7 @@ const Drop: React.FC<{
                   className="btn btn-sm mr-1 px-1 opacity-60 transition-all hover:btn-error hover:opacity-100"
                   onClick={() => handleFlagClick()}
                 >
+                  <span className="sr-only">Flag Question</span>
                   <TriangleFlag />
                 </button>
               </SmoothMount>
@@ -211,6 +212,7 @@ const Drop: React.FC<{
                   className="btn btn-sm mr-1 px-1 opacity-60 transition-all hover:btn-info hover:opacity-100"
                   onClick={() => getNext()}
                 >
+                  <span className="sr-only">Skip Question</span>
                   <SkipNext />
                 </button>
               </SmoothMount>

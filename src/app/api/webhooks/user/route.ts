@@ -40,7 +40,7 @@ const mapAttributesToSupabaseFields = (eventData: EventData) => {
 };
 
 async function handler(request: Request) {
-  const payload = await request.json();
+  const payload = (await request.json()) as EventData;
   const headersList = headers();
   const heads = {
     "svix-id": headersList.get("svix-id"),
@@ -119,7 +119,7 @@ type EventData = {
   backup_code_enabled: boolean;
   banned: boolean;
   create_organization_enabled: true;
-  created_at: 1706550361691;
+  created_at: number;
   delete_self_enabled: true;
   email_addresses: {
     email_address: string;
@@ -132,9 +132,9 @@ type EventData = {
   first_name: string;
   has_image: boolean;
   image_url: string;
-  last_active_at: 1706486400000;
+  last_active_at: number;
   last_name: string;
-  last_sign_in_at: 1706557379949;
+  last_sign_in_at: number;
   locked: boolean;
   lockout_expires_in_seconds: null;
   object: string;
@@ -143,13 +143,13 @@ type EventData = {
   primary_email_address_id: string;
   primary_phone_number_id: string | null;
   primary_web3_wallet_id: string | null;
-  private_metadata: {};
+  private_metadata: string;
   profile_image_url: string;
   public_metadata: UserPublicMetadata;
   saml_accounts: [];
   totp_enabled: boolean;
   two_factor_enabled: boolean;
-  unsafe_metadata: {};
+  unsafe_metadata: string;
   updated_at: number;
   username: string | null;
   verification_attempts_remaining: number;

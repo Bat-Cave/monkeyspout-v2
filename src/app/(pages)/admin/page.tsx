@@ -2,14 +2,7 @@ import supabase from "@/lib/supabase";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
 import Link from "next/link";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/UI/card";
+import { Card, CardContent, CardHeader } from "@/components/UI/card";
 import AnimatedNumber from "@/components/UI/animated-number";
 
 const Admin = async ({
@@ -38,7 +31,7 @@ const Admin = async ({
     +searchParams?.page <= totalPages
       ? +searchParams?.page
       : 1;
-  const { data: questions, error } = await supabase
+  const { data: questions } = await supabase
     .from("Questions")
     .select("*")
     .range((page - 1) * perPage, page * perPage);
@@ -63,7 +56,7 @@ const Admin = async ({
           <CardHeader className="py-1 text-2xl">Flags</CardHeader>
           <CardContent className="flex flex-col items-center gap-2 py-2">
             <AnimatedNumber
-              value={totalFlags}
+              value={totalFlags || 0}
               className="text-6xl font-semibold"
             />{" "}
           </CardContent>

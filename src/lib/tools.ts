@@ -1,4 +1,6 @@
-type Question = any;
+import type { Tables } from "@/types/supabase";
+
+type Question = Tables<"Questions">;
 
 export const shuffle = (array: Question[]) => {
   return array

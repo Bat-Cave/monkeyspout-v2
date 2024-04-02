@@ -68,6 +68,8 @@ const Bucket: React.FC<BucketConfig> = ({
   const dropsRef = useRef<number[] | undefined>();
   dropsRef.current = dropsCreated;
 
+  console.log({ flaggedQuestion, isOpen });
+
   const { setFilter, loading } = useQuestions();
 
   const dropLoaded = () => {
